@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komunitas Istal Al Barokah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .font-arabic {
+            font-family: 'Amiri', serif;
+        }
+        /* Style scrollbar chat minimalis */
+        .chat-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+        .chat-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb {
+            background: #059669;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-emerald-950 text-slate-800 min-h-screen flex flex-col items-center p-3 sm:p-6">
+
+    <div class="w-full max-w-4xl bg-slate-50 rounded-3xl shadow-2xl overflow-hidden border border-emerald-800/30 flex flex-col min-h-screen">
+        
+        <header class="bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 text-white p-5 sm:p-7 relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                <i class="fa-solid font-arabic text-9xl">🕌</i>
+            </div>
+
+            <div class="flex items-center space-x-4 mb-6 relative z-10">
+                <div class="w-14 h-14 bg-emerald-700/60 border-2 border-amber-400/80 rounded-2xl flex items-center justify-center shadow-lg transform rotate-3">
+                    <i class="fa-solid fa-mosque text-2xl text-amber-300"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-wide text-amber-200">Istal Al Barokah</h1>
+                    <p class="text-xs sm:text-sm text-emerald-200 opacity-90">Aplikasi Komunitas & Ruang Silaturahmi Digital</p>
+                </div>
+            </div>
+
+            <div class="bg-emerald-950/60 backdrop-blur-md border border-emerald-600/40 rounded-2xl p-4 shadow-inner relative z-10">
+                <div class="flex justify-between items-center mb-3 border-b border-emerald-700/50 pb-2">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-emerald-300"><i class="fa-regular fa-clock mr-1"></i> Jadwal Sholat Harian</span>
+                    <span id="current-date" class="text-xs text-amber-200">--:--:--</span>
+                </div>
+                <div class="grid grid-cols-5 gap-1 sm:gap-2 text-center text-xs sm:text-sm">
+                    <div class="bg-emerald-800/50 p-2 rounded-xl border border-emerald-600/30">
+                        <div class="text-emerald-300 font-medium">Subuh</div>
+                        <div id="subuh" class="font-bold text-white mt-1">04:35</div>
+                    </div>
+                    <div class="bg-emerald-800/50 p-2 rounded-xl border border-emerald-600/30">
+                        <div class="text-emerald-300 font-medium">Dzuhur</div>
+                        <div id="dzuhur" class="font-bold text-white mt-1">12:00</div>
+                    </div>
+                    <div class="bg-emerald-800/50 p-2 rounded-xl border border-emerald-600/30">
+                        <div class="text-emerald-300 font-medium">Ashar</div>
+                        <div id="ashar" class="font-bold text-white mt-1">15:15</div>
+                    </div>
+                    <div class="bg-emerald-800/50 p-2 rounded-xl border border-emerald-600/30">
+                        <div class="text-emerald-300 font-medium">Maghrib</div>
+                        <div id="maghrib" class="font-bold text-white mt-1">18:05</div>
+                    </div>
+                    <div class="bg-emerald-800/50 p-2 rounded-xl border border-emerald-600/30">
+                        <div class="text-emerald-300 font-medium">Isya</div>
+                        <div id="isya" class="font-bold text-white mt-1">19:15</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-4 sm:p-6 space-y-6 flex-grow">
+            
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                
+                <button onclick="openModal('modal-quotes')" class="group p-4 bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 active:scale-95 border border-emerald-400/30 flex flex-col justify-between items-start text-left relative overflow-hidden">
+                    <div class="absolute -right-3 -top-3 w-16 h-16 bg-white/10 rounded-full blur-sm group-hover:scale-150 transition-transform"></div>
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-quote-left text-lg text-amber-200"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base sm:text-lg">Quotes Islam</h3>
+                        <p class="text-xs text-emerald-100 opacity-90 mt-0.5">Motivasi harian otomatis</p>
+                    </div>
+                </button>
+
+                <button onclick="openModal('modal-hadits')" class="group p-4 bg-gradient-to-br from-emerald-600 to-emerald-700 text-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 active:scale-95 border border-emerald-400/30 flex flex-col justify-between items-start text-left relative overflow-hidden">
+                    <div class="absolute -right-3 -top-3 w-16 h-16 bg-white/10 rounded-full blur-sm group-hover:scale-150 transition-transform"></div>
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-book-bookmark text-lg text-amber-200"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base sm:text-lg">Hadits Pilihan</h3>
+                        <p class="text-xs text-emerald-100 opacity-90 mt-0.5">Panduan & sunnah Nabi</p>
+                    </div>
+                </button>
+
+                <button onclick="openModal('modal-quran')" class="group p-4 bg-gradient-to-br from-teal-600 to-emerald-800 text-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 active:scale-95 border border-emerald-400/30 flex flex-col justify-between items-start text-left relative overflow-hidden">
+                    <div class="absolute -right-3 -top-3 w-16 h-16 bg-white/10 rounded-full blur-sm group-hover:scale-150 transition-transform"></div>
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-quran text-lg text-amber-200"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base sm:text-lg">Surat Pendek</h3>
+                        <p class="text-xs text-emerald-100 opacity-90 mt-0.5">Belajar Al-Qur'an mudah</p>
+                    </div>
+                </button>
+
+                <button onclick="openModal('modal-sodakoh')" class="group p-4 bg-gradient-to-br from-amber-500 to-emerald-600 text-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 active:scale-95 border border-amber-300/30 flex flex-col justify-between items-start text-left relative overflow-hidden">
+                    <div class="absolute -right-3 -top-3 w-16 h-16 bg-white/10 rounded-full blur-sm group-hover:scale-150 transition-transform"></div>
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-hand-holding-heart text-lg text-amber-200"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base sm:text-lg">Infaq / Sodakoh</h3>
+                        <p class="text-xs text-emerald-100 opacity-90 mt-0.5">Scan QRIS Barokah</p>
+                    </div>
+                </button>
+
+            </div>
+
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-lg overflow-hidden flex flex-col">
+                <div class="bg-emerald-800 text-white px-5 py-3.5 flex justify-between items-center border-b border-emerald-700">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                        <h2 class="font-bold text-sm sm:text-base">Ruang Silaturahmi Komunitas</h2>
+                    </div>
+                    <span class="text-xs text-emerald-200 bg-emerald-900/60 px-2.5 py-1 rounded-full border border-emerald-600">Tanpa Login</span>
+                </div>
+
+                <div id="chat-box" class="h-64 sm:h-80 overflow-y-auto p-4 space-y-3 bg-slate-50 chat-scroll">
+                    <div class="text-center text-xs text-slate-400 my-2">-- Memuat percakapan terbaru --</div>
+                </div>
+
+                <div class="p-3 bg-slate-100 border-t border-slate-200">
+                    <form id="chat-form" class="space-y-2">
+                        <div class="flex gap-2">
+                            <input type="text" id="username" placeholder="Nama Anda (opsional)..." required class="text-xs sm:text-sm bg-white border border-slate-300 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 w-1/2">
+                            
+                            <select id="user-avatar" class="text-xs sm:text-sm bg-white border border-slate-300 rounded-xl px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 w-1/2">
+                                <option value="👳‍♂️">👳‍♂️ Ikhwan 1</option>
+                                <option value="🧔">🧔 Ikhwan 2</option>
+                                <option value="🧕">🧕 Akhwat 1</option>
+                                <option value="👵">👵 Akhwat 2</option>
+                                <option value="🕌">🕌 Masjid</option>
+                                <option value="💚">💚 Hamba Allah</option>
+                            </select>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <input type="text" id="message-input" placeholder="Tulis pesan silaturahmi..." required class="flex-grow text-xs sm:text-sm bg-white border border-slate-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-md flex items-center gap-1.5">
+                                <span>Kirim</span>
+                                <i class="fa-solid fa-paper-plane text-xs"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+
+        <div id="modal-quotes" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-3xl max-w-md w-full p-6 relative border-2 border-emerald-600 shadow-2xl animate-fade-in">
+                <button onclick="closeModal('modal-quotes')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <div class="text-center space-y-4">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto text-xl">
+                        <i class="fa-solid fa-quote-left"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-emerald-900">Quotes Islam Hari Ini</h3>
+                    <div id="quote-text" class="text-slate-700 text-sm italic bg-emerald-50 p-4 rounded-2xl border border-emerald-200">
+                        "Jangan menjelaskan tentang dirimu kepada siapa pun, karena yang menyukaimu tidak butuh itu, dan yang membencimu tidak percaya itu." — Ali bin Abi Thalib
+                    </div>
+                    <button onclick="randomQuote()" class="bg-emerald-600 text-white text-xs px-4 py-2 rounded-xl hover:bg-emerald-700 transition">Ganti Quote <i class="fa-solid fa-rotate ml-1"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-hadits" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-3xl max-w-md w-full p-6 relative border-2 border-emerald-600 shadow-2xl">
+                <button onclick="closeModal('modal-hadits')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <div class="space-y-3 text-center">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto text-xl">
+                        <i class="fa-solid fa-book-open-reader"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-emerald-900">Hadits Shahih Pilihan</h3>
+                    <p class="font-arabic text-xl text-slate-800 leading-loose">خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ</p>
+                    <p class="text-xs text-slate-600 italic">"Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia lainnya."</p>
+                    <div class="text-xs text-emerald-700 font-semibold">(HR. Ahmad & Thabrani)</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-quran" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-3xl max-w-md w-full p-6 relative border-2 border-emerald-600 shadow-2xl max-h-[80vh] overflow-y-auto">
+                <button onclick="closeModal('modal-quran')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <div class="space-y-4">
+                    <h3 class="font-bold text-lg text-emerald-900 text-center">Surat Al-Ikhlas</h3>
+                    <div class="text-right space-y-3 bg-emerald-50/60 p-4 rounded-2xl border border-emerald-200">
+                        <p class="font-arabic text-xl text-slate-800">قُلْ هُوَ اللَّهُ أَحَدٌ ﴿١﴾</p>
+                        <p class="text-xs text-slate-500">1. Katakanlah: "Dialah Allah, Yang Maha Esa."</p>
+                        <p class="font-arabic text-xl text-slate-800">اللَّهُ الصَّمَدُ ﴿٢﴾</p>
+                        <p class="text-xs text-slate-500">2. "Allah adalah Tuhan yang bergantung kepada-Nya segala sesuatu."</p>
+                        <p class="font-arabic text-xl text-slate-800">لَمْ يَلِدْ وَلَمْ يُولَدْ ﴿٣﴾</p>
+                        <p class="text-xs text-slate-500">3. "Dia tiada beranak dan tidak pula diperanakkan,"</p>
+                        <p class="font-arabic text-xl text-slate-800">وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ ﴿٤﴾</p>
+                        <p class="text-xs text-slate-500">4. "Dan tidak ada seorang pun yang setara dengan Dia."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-sodakoh" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-3xl max-w-md w-full p-6 relative border-2 border-amber-500 shadow-2xl text-center space-y-4">
+                <button onclick="closeModal('modal-sodakoh')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+                
+                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-xl">
+                    <i class="fa-solid fa-qrcode"></i>
+                </div>
+                
+                <h3 class="font-bold text-lg text-emerald-900">Infaq & Sodakoh Barokah</h3>
+                
+                <div class="bg-slate-100 p-3 rounded-2xl inline-block border border-slate-300">
+                    <img id="qris-image" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Sodakoh+Istal+Al+Barokah" alt="Scan QRIS Sodakoh" class="w-48 h-48 mx-auto object-contain rounded-lg">
+                </div>
+
+                <div class="text-xs text-slate-600 space-y-1">
+                    <p class="font-medium text-emerald-800">"Sedekah tidak akan mengurangi harta." (HR. Muslim)</p>
+                    <p class="text-slate-500">Salurkan infaq terbaik Anda untuk operasional dan kegiatan kebaikan bersama.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white p-5 border-t border-emerald-700/40 text-xs sm:text-sm">
+            <div class="space-y-2 text-center sm:text-left">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-2">
+                    <p class="font-semibold text-amber-300">Aplikasi ini dikembangkan oleh: <span class="text-white">Istal Al Barokah</span></p>
+                    <a href="https://wa.me/6283116586904" target="_blank" class="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-xl font-medium transition flex items-center gap-1.5">
+                        <i class="fa-brands fa-whatsapp text-sm text-emerald-300"></i>
+                        <span>WhatsApp: 083116586904</span>
+                    </a>
+                </div>
+                <p class="text-emerald-300/80 text-xs leading-relaxed">
+                    <i class="fa-solid fa-location-dot mr-1"></i> Alamat: Jl. Kp. Krajan Desa Wanajaya RT. 05 Gang Masid ke Barat.
+                </p>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // --- 1. SETTING FIREBASE (Isi Konfigurasi Firebase Anda di sini) ---
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        // Inisialisasi Firebase (jika config valid)
+        let db = null;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+        } catch(e) {
+            console.log("Firebase belum dikonfigurasi, menggunakan mode sampel lokal.");
+        }
+
+        // --- 2. LOGIKA ROOM CHAT ---
+        const chatForm = document.getElementById('chat-form');
+        const chatBox = document.getElementById('chat-box');
+        const messageInput = document.getElementById('message-input');
+        const usernameInput = document.getElementById('username');
+        const avatarSelect = document.getElementById('user-avatar');
+
+        // Render Pesan ke Layar
+        function renderMessage(nama, avatar, pesan, waktu, isMe=false) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex gap-2 text-xs sm:text-sm ${isMe ? 'justify-end' : 'justify-start'}`;
+            
+            msgDiv.innerHTML = `
+                ${!isMe ? `<div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-base flex-shrink-0">${avatar}</div>` : ''}
+                <div class="max-w-[75%]">
+                    <div class="flex items-center gap-1.5 mb-0.5 ${isMe ? 'justify-end' : 'justify-start'}">
+                        <span class="font-semibold text-slate-700 text-[11px]">${nama}</span>
+                        <span class="text-[10px] text-slate-400">${waktu}</span>
+                    </div>
+                    <div class="p-3 ${isMe ? 'bg-emerald-600 text-white rounded-2xl rounded-tr-none' : 'bg-white text-slate-800 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm'}">
+                        ${pesan}
+                    </div>
+                </div>
+                ${isMe ? `<div class="w-8 h-8 bg-emerald-700 rounded-full flex items-center justify-center text-base text-white flex-shrink-0">${avatar}</div>` : ''}
+            `;
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Jalankan percakapan bawaan / pendengar Firebase
+        if (db) {
+            const chatRef = db.ref('chat_room');
+            chatRef.limitToLast(30).on('child_added', (snapshot) => {
+                const data = snapshot.val();
+                const myName = usernameInput.value || 'Anonim';
+                renderMessage(data.nama, data.avatar, data.pesan, data.waktu, data.nama === myName);
+            });
+        } else {
+            // Data Sampel jika Firebase belum dipasang
+            chatBox.innerHTML = '';
+            renderMessage('Sdr. Ahmad', '👳‍♂️', 'Assalamu\'alaikum wr. wb. Salam kenal semuanya!', '08:15');
+            renderMessage('Ustadz Fatih', '🕌', 'Wa\'alaikumussalam wr. wb. Selamat datang di grup silaturahmi.', '08:20');
+        }
+
+        // Kirim Pesan
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nama = usernameInput.value.trim() || 'Hamba Allah';
+            const avatar = avatarSelect.value;
+            const pesan = messageInput.value.trim();
+            const waktu = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            if (!pesan) return;
+
+            if (db) {
+                db.ref('chat_room').push({ nama, avatar, pesan, waktu });
+            } else {
+                renderMessage(nama, avatar, pesan, waktu, true);
+            }
+            messageInput.value = '';
+        });
+
+        // --- 3. JADWAL SHOLAT OTOMATIS & JAM REALTIME ---
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('current-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' }) + ' ' + now.toLocaleTimeString('id-ID');
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- 4. LOGIKA MODAL POP-UP ---
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('flex');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
+        }
+
+        // List Quotes Acak
+        const quotes = [
+            '"Jangan menjelaskan tentang dirimu kepada siapa pun, karena yang menyukaimu tidak butuh itu, dan yang membencimu tidak percaya itu." — Ali bin Abi Thalib',
+            '"Dunia ini ibarat bayangan. Jika kamu berusaha menangkapnya, ia akan lari. Tapi jika kamu membelakanginya, ia tak punya pilihan selain mengikutimu." — Ibn Qayyim',
+            '"Barangsiapa mempermudah kesulitan orang lain, maka Allah akan mempermudah urusannya di dunia dan akhirat." — HR. Muslim',
+            '"Kekayaan sejati bukanlah banyaknya harta benda, melainkan kayanya hati." — HR. Bukhari & Muslim'
+        ];
+
+        function randomQuote() {
+            const quoteEl = document.getElementById('quote-text');
+            const random = quotes[Math.floor(Math.random() * quotes.length)];
+            quoteEl.innerText = random;
+        }
+    </script>
+</body>
+</html>
