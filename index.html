@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ISTAL - Istiqomah Al Barokah</title>
     <!-- Google Fonts & FontAwesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -17,7 +17,6 @@
             --pure-white: #ffffff;
             --off-white: #f4f7f5;
             --text-dark: #1c2826;
-            --text-muted: #66706e;
         }
 
         * {
@@ -31,7 +30,7 @@
         body {
             background-color: var(--off-white);
             color: var(--text-dark);
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         .arabic-text {
@@ -43,78 +42,80 @@
             background: linear-gradient(180deg, #051d15 0%, var(--bg-dark-green) 100%);
             color: var(--pure-white);
             text-align: center;
-            padding: 18px 12px 14px;
-            border-bottom: 3px solid var(--accent-gold);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 12px 8px 8px;
+            border-bottom: 2px solid var(--accent-gold);
         }
 
         .bismillah {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--accent-gold);
             margin-bottom: 2px;
         }
 
         .header-title {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             color: var(--pure-white);
-            line-height: 1.1;
+            line-height: 1;
         }
 
         .header-caption {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: var(--light-gold);
             font-style: italic;
-            margin-bottom: 12px;
-            letter-spacing: 1px;
+            margin-bottom: 8px;
         }
 
-        /* PRAYER TIMES & LIVE CLOCK (MINIMALIS & SEJAJAR) */
-        .prayer-bar-wrapper {
-            max-width: 800px;
-            margin: 0 auto;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none;  /* IE/Edge */
-            padding: 4px 0;
-        }
-        
-        .prayer-bar-wrapper::-webkit-scrollbar {
-            display: none; /* Chrome/Safari/Opera */
+        /* LIVE CLOCK & PRAYER TIMES (SANGAT KECIL & PRESISI SEJAJAR) */
+        .prayer-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 4px;
         }
 
         .prayer-bar {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 6px;
+            justify-content: space-between;
+            gap: 4px;
+            width: 100%;
+            max-width: 600px;
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 30px;
-            padding: 4px 10px;
+            border-radius: 20px;
+            padding: 3px 6px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+        }
+
+        .prayer-bar::-webkit-scrollbar {
+            display: none;
         }
 
         .clock-badge {
             background: var(--accent-gold);
             color: var(--bg-dark-green);
-            font-size: 0.72rem;
+            font-size: 0.65rem;
             font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 20px;
+            padding: 2px 8px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
+            flex-shrink: 0;
         }
 
         .prayer-item {
-            font-size: 0.72rem;
+            font-size: 0.65rem;
             color: rgba(255, 255, 255, 0.9);
             background: rgba(0, 0, 0, 0.25);
-            padding: 3px 8px;
-            border-radius: 15px;
-            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 10px;
+            flex-shrink: 0;
         }
 
         .prayer-item strong {
@@ -126,8 +127,8 @@
             background-color: var(--secondary-green);
             color: var(--pure-white);
             border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            padding: 6px 0;
-            font-size: 0.82rem;
+            padding: 4px 0;
+            font-size: 0.75rem;
             overflow: hidden;
             white-space: nowrap;
         }
@@ -139,7 +140,7 @@
 
         .marquee-content i {
             color: var(--accent-gold);
-            margin-right: 6px;
+            margin-right: 4px;
         }
 
         @keyframes marquee {
@@ -147,7 +148,7 @@
             100% { transform: translateX(-100%); }
         }
 
-        /* SLIDER (FULL WIDTH, TANPA LENGKUNGAN, 4 DETIK) */
+        /* SLIDER RINGKAS (TIDAK TERLALU BESAR) */
         .slider-container {
             position: relative;
             width: 100%;
@@ -157,7 +158,7 @@
 
         .slider-wrapper {
             display: flex;
-            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: transform 0.5s ease-in-out;
             width: 300%;
         }
 
@@ -168,197 +169,185 @@
 
         .slide img {
             width: 100%;
-            height: 320px;
+            height: 180px; /* Diperkecil agar tidak menutupi layar */
             object-fit: cover;
             display: block;
-            border-radius: 0;
         }
 
         .slide-caption {
             position: absolute;
             bottom: 0;
             left: 0; right: 0;
-            background: linear-gradient(transparent, rgba(9, 44, 32, 0.9));
+            background: linear-gradient(transparent, rgba(9, 44, 32, 0.85));
             color: var(--pure-white);
-            padding: 20px 15px 10px;
+            padding: 12px 10px 6px;
             text-align: center;
-            font-size: 0.88rem;
-            font-weight: 500;
+            font-size: 0.75rem;
         }
 
         /* LAYOUT CONTAINER */
         .container {
-            max-width: 850px;
-            margin: 20px auto;
-            padding: 0 12px;
+            max-width: 750px;
+            margin: 12px auto;
+            padding: 0 10px;
         }
 
-        /* 4 GRID MENU KOTAK KECIL */
+        /* 4 GRID MENU MINIMALIS & KECIL */
         .grid-menu {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
         .grid-card {
             background-color: var(--pure-white);
-            border: 1.5px solid rgba(9, 44, 32, 0.15);
-            border-radius: 8px;
-            padding: 12px 5px;
+            border: 1px solid rgba(9, 44, 32, 0.15);
+            border-radius: 6px;
+            padding: 8px 2px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
         }
 
         .grid-card:hover, .grid-card:active {
             background-color: var(--bg-dark-green);
             border-color: var(--accent-gold);
-            transform: translateY(-3px);
         }
 
         .grid-card i {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--bg-dark-green);
-            margin-bottom: 6px;
-            transition: color 0.25s ease;
+            margin-bottom: 3px;
+            display: block;
         }
 
         .grid-card span {
             display: block;
-            font-size: 0.78rem;
+            font-size: 0.7rem;
             font-weight: 600;
             color: var(--text-dark);
-            transition: color 0.25s ease;
+            line-height: 1.1;
         }
 
         .grid-card:hover i { color: var(--accent-gold); }
         .grid-card:hover span { color: var(--pure-white); }
 
-        /* CHAT ROOM / RUANG SAPA */
+        /* CHAT ROOM / UTAMA */
         .main-content {
             background: var(--pure-white);
-            border-radius: 8px;
-            padding: 16px;
-            border-top: 4px solid var(--bg-dark-green);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
+            border-radius: 6px;
+            padding: 12px;
+            border-top: 3px solid var(--bg-dark-green);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
         }
 
         .chat-title {
             color: var(--bg-dark-green);
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid var(--off-white);
-            padding-bottom: 8px;
+            gap: 6px;
         }
 
         .chat-box {
-            height: 200px;
-            border: 1px solid #e2e8e5;
-            border-radius: 6px;
-            padding: 10px;
+            height: 160px;
+            border: 1px solid #e0e8e4;
+            border-radius: 5px;
+            padding: 8px;
             overflow-y: auto;
             background: #fafcfb;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .chat-item {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: flex;
             align-items: flex-start;
-            gap: 8px;
+            gap: 6px;
         }
 
         .chat-avatar {
-            width: 30px;
-            height: 30px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             background: var(--bg-dark-green);
             color: var(--accent-gold);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: bold;
             flex-shrink: 0;
         }
 
         .chat-text-bg {
             background: #eef4f1;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 0.82rem;
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-size: 0.78rem;
             max-width: 88%;
         }
 
         .chat-username {
             font-weight: 700;
             color: var(--bg-dark-green);
-            font-size: 0.72rem;
-            margin-bottom: 1px;
+            font-size: 0.68rem;
         }
 
         .chat-inputs {
             display: flex;
-            gap: 6px;
+            gap: 5px;
         }
 
         .chat-inputs input {
-            padding: 8px 10px;
+            padding: 6px 8px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 4px;
             outline: none;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
         }
 
-        .input-name { flex: 1; min-width: 90px; }
-        .input-msg { flex: 3; min-width: 140px; }
+        .input-name { flex: 1; min-width: 80px; }
+        .input-msg { flex: 3; min-width: 120px; }
 
         .btn-send {
             background: var(--bg-dark-green);
             color: var(--pure-white);
             border: none;
-            padding: 8px 14px;
-            border-radius: 5px;
+            padding: 6px 12px;
+            border-radius: 4px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.82rem;
-            transition: background 0.2s;
+            font-size: 0.78rem;
         }
 
-        .btn-send:hover {
-            background: var(--secondary-green);
-        }
-
-        /* POPUP / MODAL */
+        /* MODAL POPUP */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.65);
+            background: rgba(0,0,0,0.6);
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            padding: 12px;
+            padding: 10px;
         }
 
         .modal-content {
             background: var(--pure-white);
-            border-radius: 8px;
-            max-width: 480px;
+            border-radius: 6px;
+            max-width: 420px;
             width: 100%;
-            padding: 18px;
+            padding: 15px;
             position: relative;
-            border-top: 5px solid var(--accent-gold);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            animation: popIn 0.25s ease;
+            border-top: 4px solid var(--accent-gold);
+            animation: popIn 0.2s ease;
         }
 
         @keyframes popIn {
@@ -368,75 +357,70 @@
 
         .close-btn {
             position: absolute;
-            top: 8px; right: 12px;
-            font-size: 1.4rem;
+            top: 6px; right: 10px;
+            font-size: 1.3rem;
             cursor: pointer;
             color: #888;
         }
 
         .modal-header {
             color: var(--bg-dark-green);
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .modal-body { text-align: center; margin-top: 12px; }
-        .modal-body img { max-width: 100%; border-radius: 6px; }
+        .modal-body { text-align: center; margin-top: 10px; }
+        .modal-body img { max-width: 100%; border-radius: 4px; }
 
-        /* FOOTER LENGKAP */
+        /* FOOTER KECIL & RAPI */
         footer {
             background: var(--bg-dark-green);
             color: var(--pure-white);
-            padding: 25px 15px 15px;
+            padding: 20px 10px 12px;
             border-top: 3px solid var(--accent-gold);
         }
 
         .footer-grid {
-            max-width: 850px;
+            max-width: 750px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            font-size: 0.8rem;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            font-size: 0.75rem;
         }
 
         .footer-col h4 {
             color: var(--accent-gold);
-            margin-bottom: 8px;
-            font-size: 0.92rem;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
             border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            padding-bottom: 4px;
+            padding-bottom: 2px;
         }
 
         .footer-col p { color: #d0ded8; }
 
         .social-links a {
             color: var(--pure-white);
-            font-size: 1.1rem;
-            margin-right: 10px;
+            font-size: 1rem;
+            margin-right: 8px;
             text-decoration: none;
-            transition: color 0.2s;
         }
-
-        .social-links a:hover { color: var(--accent-gold); }
 
         .watermark {
             text-align: center;
-            margin-top: 20px;
-            padding-top: 12px;
+            margin-top: 15px;
+            padding-top: 10px;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             color: rgba(255, 255, 255, 0.6);
         }
 
-        /* RESPONSIVE DESIGN (HP & TABLET) */
         @media (max-width: 600px) {
-            .grid-menu { grid-template-columns: repeat(2, 1fr); }
-            .header-title { font-size: 1.7rem; }
-            .slide img { height: 210px; }
+            .slide img { height: 130px; }
+            .grid-menu { gap: 5px; }
             .chat-inputs { flex-direction: column; }
             .input-name, .input-msg, .btn-send { width: 100%; }
         }
@@ -450,8 +434,8 @@
         <h1 class="header-title">ISTAL</h1>
         <p class="header-caption">istiqomah al barokah</p>
 
-        <!-- WAKTU SHOLAT & JAM (SEJAJAR & MINIMALIS) -->
-        <div class="prayer-bar-wrapper">
+        <!-- LIVE CLOCK & PRAYER TIMES (PAS SCREEN & PRESISI) -->
+        <div class="prayer-container">
             <div class="prayer-bar">
                 <div class="clock-badge">
                     <i class="fa-regular fa-clock"></i> <span id="clock">00:00:00</span>
@@ -468,23 +452,23 @@
     <!-- RUNNING TEXT -->
     <div class="marquee-container">
         <div class="marquee-content">
-            <i class="fa-solid fa-bullhorn"></i> INFO TERBARU: Rutinan Pengajian Malam Jumat pkl 19.30 WIB | Mari perbanyak Infaq & Sodaqoh | Tetap Istiqomah menjaga sholat berjamah.
+            <i class="fa-solid fa-bullhorn"></i> INFO TERBARU: Pengajian Rutin Malam Jumat pkl 19.30 WIB | Mari salurkan Sodaqoh terbaik Anda | Jaga istiqomah & ukhuwah islamiyah.
         </div>
     </div>
 
-    <!-- FULL WIDTH SLIDER (NO CURVES, 4 DETIK) -->
+    <!-- SLIDER RINGKAS (4 DETIK) -->
     <div class="slider-container">
         <div class="slider-wrapper" id="sliderWrapper">
             <div class="slide">
-                <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=1000&q=80" alt="Kegiatan 1">
+                <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=800&q=80" alt="Kegiatan 1">
                 <div class="slide-caption">Kajian & Silaturahmi Rutin ISTAL</div>
             </div>
             <div class="slide">
-                <img src="https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1000&q=80" alt="Kegiatan 2">
+                <img src="https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=800&q=80" alt="Kegiatan 2">
                 <div class="slide-caption">Ngaji Keliling Antar Pemuda</div>
             </div>
             <div class="slide">
-                <img src="https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=1000&q=80" alt="Kegiatan 3">
+                <img src="https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=800&q=80" alt="Kegiatan 3">
                 <div class="slide-caption">Program Sodaqoh & Peduli Umat</div>
             </div>
         </div>
@@ -513,7 +497,7 @@
             </div>
         </div>
 
-        <!-- MAIN SECTION: CHAT ROOM -->
+        <!-- CHAT ROOM -->
         <div class="main-content">
             <div class="chat-title">
                 <i class="fa-solid fa-comments"></i> Ruang Sapa & Silaturahmi
@@ -524,15 +508,14 @@
                     <div class="chat-avatar">A</div>
                     <div class="chat-text-bg">
                         <div class="chat-username">Admin ISTAL</div>
-                        Assalamu'alaikum kawan-kawan Istiqomah Al Barokah! Selamat berkunjung di aplikasi komunitas ISTAL.
+                        Assalamu'alaikum kawan-kawan! Selamat berkunjung di aplikasi ISTAL.
                     </div>
                 </div>
             </div>
 
-            <!-- CHAT INPUT (TANPA LOGIN) -->
             <div class="chat-inputs">
                 <input type="text" id="chatName" class="input-name" placeholder="Nama Anda...">
-                <input type="text" id="chatMsg" class="input-msg" placeholder="Tulis pesan sapaan...">
+                <input type="text" id="chatMsg" class="input-msg" placeholder="Ketik pesan sapaan...">
                 <button class="btn-send" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i> Kirim</button>
             </div>
         </div>
@@ -547,29 +530,29 @@
             <span class="close-btn" onclick="closeModal('modalQuotes')">&times;</span>
             <div class="modal-header"><i class="fa-solid fa-quote-left"></i> Quotes Islam Harian</div>
             <div class="modal-body">
-                <p class="arabic-text" style="font-size: 1.4rem; margin: 12px 0; color: var(--bg-dark-green);" id="quoteArabic">
+                <p class="arabic-text" style="font-size: 1.3rem; margin: 10px 0; color: var(--bg-dark-green);" id="quoteArabic">
                     إِنَّ مَعَ الْعُسْرِ يُسْرًا
                 </p>
-                <p style="font-style: italic; color: #444; font-size: 0.85rem;" id="quoteText">
+                <p style="font-style: italic; color: #444; font-size: 0.8rem;" id="quoteText">
                     "Sesungguhnya sesudah kesulitan itu ada kemudahan." (QS. Al-Insyirah: 6)
                 </p>
-                <button class="btn-send" style="margin-top: 15px;" onclick="randomQuote()">Acak Quote</button>
+                <button class="btn-send" style="margin-top: 12px;" onclick="randomQuote()">Acak Quote</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal 2: Gallery -->
+    <!-- Modal 2: Gallery (KHUSUS TAMPILAN FOTO ADMIN, TANPA TOMBOL UPLOAD) -->
     <div class="modal" id="modalGallery">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalGallery')">&times;</span>
-            <div class="modal-header"><i class="fa-solid fa-images"></i> Galeri Foto Komunitas</div>
+            <div class="modal-header"><i class="fa-solid fa-images"></i> Galeri Foto Kegiatan</div>
             <div class="modal-body">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;" id="galleryContainer">
-                    <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=400&q=80" alt="Foto 1">
-                    <img src="https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=400&q=80" alt="Foto 2">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;">
+                    <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=400&q=80" alt="Kegiatan ISTAL 1">
+                    <img src="https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=400&q=80" alt="Kegiatan ISTAL 2">
+                    <img src="https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=400&q=80" alt="Kegiatan ISTAL 3">
+                    <img src="https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=400&q=80" alt="Kegiatan ISTAL 4">
                 </div>
-                <input type="file" id="uploadInput" accept="image/*" style="display:none;" onchange="handleUpload(event)">
-                <button class="btn-send" onclick="document.getElementById('uploadInput').click()"><i class="fa-solid fa-upload"></i> Upload Foto Baru</button>
             </div>
         </div>
     </div>
@@ -580,8 +563,8 @@
             <span class="close-btn" onclick="closeModal('modalSodaqoh')">&times;</span>
             <div class="modal-header"><i class="fa-solid fa-qrcode"></i> Infaq & Sodaqoh ISTAL</div>
             <div class="modal-body">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=SodaqohISTAL" alt="QRIS Sodaqoh" style="width: 170px; margin: 10px auto; border: 2px solid var(--accent-gold); padding: 4px; background: #fff;">
-                <p style="font-size: 0.82rem; color: #444; margin-top: 10px; line-height: 1.4;">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=SodaqohISTAL" alt="QRIS Sodaqoh" style="width: 150px; margin: 5px auto; border: 2px solid var(--accent-gold); padding: 4px; background: #fff;">
+                <p style="font-size: 0.78rem; color: #444; margin-top: 8px;">
                     Scan QRIS di atas untuk menyalurkan infaq & sodaqoh terbaik Anda.<br>
                     <em>"Sedekah itu tidak akan mengurangi harta." (HR. Muslim)</em>
                 </p>
@@ -593,34 +576,34 @@
     <div class="modal" id="modalKegiatan">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalKegiatan')">&times;</span>
-            <div class="modal-header"><i class="fa-solid fa-scroll"></i> Surat & Agenda Kegiatan</div>
-            <div class="modal-body" style="text-align: left; font-size: 0.85rem;">
-                <div style="background: #eef4f1; padding: 10px; border-radius: 6px; margin-bottom: 8px;">
+            <div class="modal-header"><i class="fa-solid fa-scroll"></i> Agenda Kegiatan ISTAL</div>
+            <div class="modal-body" style="text-align: left; font-size: 0.8rem;">
+                <div style="background: #eef4f1; padding: 8px; border-radius: 5px; margin-bottom: 6px;">
                     <strong>1. Rutinan Malam Jumat</strong><br>
                     Pembacaan Surat Yasin, Tahlil, dan Hadroh bersama jamaah.
                 </div>
-                <div style="background: #eef4f1; padding: 10px; border-radius: 6px; margin-bottom: 8px;">
+                <div style="background: #eef4f1; padding: 8px; border-radius: 5px; margin-bottom: 6px;">
                     <strong>2. Ngaji Keliling</strong><br>
-                    Silaturahmi dan kajian fikih/akhlak dari rumah ke rumah anggota.
+                    Silaturahmi dan kajian fikih/akhlak antar rumah jamaah.
                 </div>
-                <div style="background: #eef4f1; padding: 10px; border-radius: 6px;">
-                    <strong>3. Program Jum'at Berkah</strong><br>
-                    Pembagian paket sembako / makanan hasil dari donasi QRIS Sodaqoh.
+                <div style="background: #eef4f1; padding: 8px; border-radius: 5px;">
+                    <strong>3. Berbagi Jum'at Berkah</strong><br>
+                    Penyaluran paket makanan dari dana hasil infaq QRIS.
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- FOOTER LENGKAP -->
+    <!-- FOOTER -->
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
                 <h4>Komunitas ISTAL</h4>
-                <p>Istiqomah Al Barokah — Wadah pemuda dan jamaah untuk mempererat silaturahmi, kajian, dan kegiatan sosial islami.</p>
+                <p>Istiqomah Al Barokah — Wadah pemuda & jamaah untuk mempererat silaturahmi dan kajian islam.</p>
             </div>
             <div class="footer-col">
                 <h4>Informasi & Lokasi</h4>
-                <p><strong>Pengembang:</strong> Tim Tim ISTAL Tech</p>
+                <p><strong>Pengembang:</strong> Tim ISTAL Tech</p>
                 <p><strong>Lokasi:</strong> Bandung, Jawa Barat</p>
             </div>
             <div class="footer-col">
@@ -662,7 +645,7 @@
         }
         setInterval(autoSlide, 4000);
 
-        // 3. MODAL / POPUP CONTROLLER
+        // 3. MODAL CONTROLLER
         function openModal(id) {
             document.getElementById(id).style.display = 'flex';
         }
@@ -719,21 +702,6 @@
             chatBox.innerHTML += chatHtml;
             chatBox.scrollTop = chatBox.scrollHeight;
             msgInput.value = '';
-        }
-
-        // 6. SIMULASI UPLOAD FOTO GALERI
-        function handleUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    document.getElementById('galleryContainer').appendChild(img);
-                }
-                reader.readAsDataURL(file);
-                alert('Foto berhasil ditambahkan ke galeri sementara!');
-            }
         }
     </script>
 </body>
