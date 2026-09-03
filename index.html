@@ -914,19 +914,36 @@
             document.getElementById('chatSendForm').style.display = 'flex';
             renderChats();
         }
+function showLoggedInUI(username) {
+    document.getElementById('authBox').style.display = 'none';
+    document.getElementById('welcomeBanner').style.display = 'flex';
+    document.getElementById('userDisplayName').innerText = username;
+    document.getElementById('chatSendForm').style.display = 'flex';
 
-        function showLoggedOutUI() {
-            document.getElementById('authBox').style.display = 'block';
-            document.getElementById('welcomeBanner').style.display = 'none';
-            document.getElementById('chatSendForm').style.display = 'none';
-            document.getElementById('authUsername').value = '';
-            document.getElementById('authPassword').value = '';
-            renderChats();
-        }
+    // Cek apakah user yang login adalah Admin
+    const btnReset = document.getElementById('btnAdminReset');
+    if (btnReset) {
+        // Daftar nama username yang dianggap sebagai Admin (bebas kamu sesuaikan)
+        const isAdmin = ['sutur00', 'sutur00'].includes(username.toLowerCase());
+        btnReset.style.display = isAdmin ? 'inline-block' : 'none';
+    }
 
-        function logoutUser() {
-            localStorage.removeItem('ISTAL_ACTIVE_USER');
-            showLoggedOutUI();
+    renderChats();
+}
+
+function showLoggedOutUI() {
+    document.getElementById('authBox').style.display = 'block';
+    document.getElementById('welcomeBanner').style.display = 'none';
+    document.getElementById('chatSendForm').style.display = 'none';
+
+    // Sembunyikan tombol reset saat logout
+    const btnReset = document.getElementById('btnAdminReset');
+    if (btnReset) btnReset.style.display = 'none';
+
+    document.getElementById('authUsername').value = '';
+    document.getElementById('authPassword').value = '';
+    renderChats();
+        
         }
 
         function sendChatMessage() {
