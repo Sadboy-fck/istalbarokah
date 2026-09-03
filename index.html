@@ -914,6 +914,7 @@
             document.getElementById('chatSendForm').style.display = 'flex';
             renderChats();
         }
+
 function showLoggedInUI(username) {
     document.getElementById('authBox').style.display = 'none';
     document.getElementById('welcomeBanner').style.display = 'flex';
@@ -930,21 +931,13 @@ function showLoggedInUI(username) {
 
     renderChats();
 }
-
-function showLoggedOutUI() {
-    document.getElementById('authBox').style.display = 'block';
-    document.getElementById('welcomeBanner').style.display = 'none';
-    document.getElementById('chatSendForm').style.display = 'none';
-
-    // Sembunyikan tombol reset saat logout
-    const btnReset = document.getElementById('btnAdminReset');
-    if (btnReset) btnReset.style.display = 'none';
-
-    document.getElementById('authUsername').value = '';
-    document.getElementById('authPassword').value = '';
-    renderChats();
-        
-        }
+function logoutUser() {
+    // 1. Hapus sesi login pengguna
+    localStorage.removeItem('ISTAL_ACTIVE_USER');
+    
+    // 2. Reload halaman otomatis untuk reset total tampilan
+    location.reload();
+}
 
         function sendChatMessage() {
             const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
