@@ -667,16 +667,15 @@
 
         <!-- CHAT ROOM -->
         <div class="main-content">
-            <div class="chat-header">
-                <div  <!-- Tombol Khusus Admin (Default Hidden) -->
-    <button id="btnAdminReset" class="btn-logout" style="background: #e74c3c; display: none;" onclick="resetChatByAdmin()">
+            
+<div class="chat-header">
+    <div class="chat-title">
+        <i class="fa-solid fa-comments"></i> Ruang Sapa & Silaturahmi
+    </div>
+    <button id="btnAdminReset" class="btn-reset-chat" onclick="resetChatByAdmin()">
         <i class="fa-solid fa-trash"></i> Reset Chat
     </button>
 </div>
-                <div class="chat-title">
-                    <i class="fa-solid fa-comments"></i> Ruang Sapa & Silaturahmi
-                </div>
-            </div>
 
             <!-- CHAT DISPLAY BOX (SELALU MUNCUL DI BERANDA) -->
             <div class="chat-box" id="chatBox"></div>
