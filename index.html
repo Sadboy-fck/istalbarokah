@@ -67,7 +67,7 @@
             margin-bottom: 10px;
         }
 
-        /* WAKTU SHOLAT PRESISI 100% FIT LAYAR */
+        /* WAKTU SHOLAT PRESISI FIT 100% LAYAR */
         .prayer-container {
             width: 100%;
             max-width: 600px;
@@ -255,9 +255,10 @@
             gap: 8px;
         }
 
-        /* CHAT DISPLAY BOX */
+        /* CHAT DISPLAY BOX (TETAP Wajib TAMPIL) */
         .chat-box {
             height: 240px;
+            min-height: 200px;
             border: 1px solid #e2e8e5;
             border-radius: 10px;
             padding: 10px;
@@ -319,7 +320,7 @@
             gap: 4px;
         }
 
-        /* INPUT CHAT PERBAIKAN RESPONSIVE FLEXBOX */
+        /* INPUT CHAT RESPONSIVE FLEXBOX */
         .chat-send-form {
             display: flex;
             gap: 6px;
@@ -330,7 +331,7 @@
 
         .chat-send-form input {
             flex: 1;
-            min-width: 0; /* PERBAIKAN BUG OVERFLOW MOBILE */
+            min-width: 0;
             padding: 9px 12px;
             border: 1.5px solid #dcdfe1;
             border-radius: 8px;
@@ -351,7 +352,7 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 0.8rem;
-            flex-shrink: 0; /* PERBAIKAN agar tombol tidak menciut/terdorong keluar */
+            flex-shrink: 0;
             white-space: nowrap;
             display: inline-flex;
             align-items: center;
@@ -652,22 +653,22 @@
                 </div>
             </div>
 
-            <!-- RUANG CHAT (TETAP TAMPIL SIKAP LOGOUT & LOGIN) -->
+            <!-- CHAT DISPLAY BOX (SELALU MUNCUL DI BERANDA) -->
             <div class="chat-box" id="chatBox"></div>
 
-            <!-- FORM KIRIM PESAN (MUNCUL JIKA SUDAH LOGIN) -->
+            <!-- FORM KIRIM CHAT (TAMPIL SAAT SUDAH LOGIN) -->
             <div class="chat-send-form" id="chatSendForm" style="display: none;">
                 <input type="text" id="chatInputMsg" placeholder="Tulis pesan sapaan Anda...">
                 <button class="btn-send" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i> Kirim</button>
             </div>
 
-            <!-- BANNER WELCOME & LOGOUT -->
+            <!-- WELCOME BANNER (TAMPIL SAAT SUDAH LOGIN) -->
             <div class="welcome-banner" id="welcomeBanner">
-                <span>Halo, <strong id="userDisplayName"></strong>!</span>
+                <span>Selamat datang, <strong id="userDisplayName"></strong>!</span>
                 <button class="btn-logout" onclick="logoutUser()">Keluar</button>
             </div>
 
-            <!-- FORM LOGIN / REGISTER DI BAWAH CHAT (MUNCUL JIKA BELUM LOGIN) -->
+            <!-- FORM LOGIN & REGISTER (TAMPIL SAAT BELUM LOGIN) -->
             <div class="auth-box" id="authBox">
                 <div class="auth-tabs">
                     <span class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Masuk (Login)</span>
@@ -689,7 +690,7 @@
 
     </div>
 
-    <!-- MODALS -->
+    <!-- MODAL POPUP -->
     <div class="modal" id="modalQuotes">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalQuotes')">&times;</span>
@@ -779,9 +780,9 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT -->
+    <!-- JAVASCRIPT FIXED REALTIME PERSISTENCE -->
     <script>
-        // 1. SLIDER
+        // SLIDER AUTOMATIS
         let slideIndex = 0;
         const sliderWrapper = document.getElementById('sliderWrapper');
         function autoSlide() {
@@ -791,7 +792,7 @@
         }
         setInterval(autoSlide, 4000);
 
-        // 2. MODAL CONTROLLER
+        // MODAL CONTROLLER
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         window.onclick = function(event) {
@@ -801,7 +802,7 @@
             }
         }
 
-        // 3. QUOTES ISLAM
+        // QUOTES ISLAM
         const quotesList = [
             { text: '"Sesungguhnya sesudah kesulitan itu ada kemudahan."', ref: '(QS. Al-Insyirah: 6)', ar: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا' },
             { text: '"Maka ingatlah kepada-Ku, Aku pun akan ingat kepadamu."', ref: '(QS. Al-Baqarah: 152)', ar: 'فَاذْكُرُونِي أَذْكُرْكُمْ' },
@@ -813,7 +814,7 @@
             document.getElementById('quoteArabic').innerText = quotesList[idx].ar;
         }
 
-        // 4. CHAT & AUTH SYSTEM
+        // AKUN & CHAT SYSTEM
         let currentAuthMode = 'login';
         const defaultChats = [
             { 
@@ -825,16 +826,29 @@
         ];
 
         function initApp() {
-            let chats = JSON.getItem('ISTAL_CHATS');
-            if (!chats) {
-                localStorage.setItem('ISTAL_CHATS', JSON.stringify(defaultChats));
-            }
-            renderChats();
+            try {
+                // Load & Ensure Chats Exist
+                let storedChats = localStorage.getItem('ISTAL_CHATS');
+                let chatsArr = storedChats ? JSON.parse(storedChats) : null;
+                
+                if (!chatsArr || !Array.isArray(chatsArr) || chatsArr.length === 0) {
+                    chatsArr = defaultChats;
+                    localStorage.setItem('ISTAL_CHATS', JSON.stringify(defaultChats));
+                }
 
-            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
-            if (activeUser) {
-                showLoggedInUI(activeUser);
-            } else {
+                renderChats();
+
+                // Load User Session
+                const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+                if (activeUser) {
+                    showLoggedInUI(activeUser);
+                } else {
+                    showLoggedOutUI();
+                }
+            } catch (err) {
+                console.error("Initialization Error:", err);
+                localStorage.setItem('ISTAL_CHATS', JSON.stringify(defaultChats));
+                renderChats();
                 showLoggedOutUI();
             }
         }
@@ -921,7 +935,7 @@
             const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
             const dateStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
 
-            let chats = JSON.parse(localStorage.getItem('ISTAL_CHATS')) || [];
+            let chats = JSON.parse(localStorage.getItem('ISTAL_CHATS')) || defaultChats;
             chats.push({ 
                 username: activeUser, 
                 text: text, 
@@ -938,20 +952,26 @@
             const chatBox = document.getElementById('chatBox');
             if (!chatBox) return;
 
-            let chats = JSON.parse(localStorage.getItem('ISTAL_CHATS')) || [];
-            chatBox.innerHTML = '';
+            let rawChats = localStorage.getItem('ISTAL_CHATS');
+            let chats = rawChats ? JSON.parse(rawChats) : defaultChats;
 
+            if (!Array.isArray(chats) || chats.length === 0) {
+                chats = defaultChats;
+            }
+
+            let htmlContent = '';
             chats.forEach(chat => {
-                const initial = chat.username ? chat.username.charAt(0).toUpperCase() : '?';
+                const username = chat.username || 'Anonim';
+                const initial = username.charAt(0).toUpperCase();
                 const timeInfo = chat.time || '';
                 const dateInfo = chat.date || '';
 
-                const chatHtml = `
+                htmlContent += `
                     <div class="chat-item">
                         <div class="chat-avatar">${initial}</div>
                         <div class="chat-content-wrapper">
                             <div class="chat-text-bg">
-                                <div class="chat-username">${chat.username}</div>
+                                <div class="chat-username">${username}</div>
                                 <div>${chat.text}</div>
                             </div>
                             <div class="chat-meta">
@@ -960,13 +980,15 @@
                         </div>
                     </div>
                 `;
-                chatBox.innerHTML += chatHtml;
             });
 
+            chatBox.innerHTML = htmlContent;
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        window.onload = initApp;
+        // INISIALISASI SAAT DOM SIAP
+        document.addEventListener('DOMContentLoaded', initApp);
+        window.addEventListener('load', renderChats);
     </script>
 </body>
 </html>
