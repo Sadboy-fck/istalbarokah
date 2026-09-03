@@ -132,7 +132,7 @@
             100% { transform: translateX(-100%); }
         }
 
-        /* SLIDER RINGKAS DENGAN SUDUT MELENGKUNG */
+        /* SLIDER RINGKAS */
         .slider-section {
             padding: 10px 10px 0;
             max-width: 750px;
@@ -226,7 +226,7 @@
         .grid-card:hover i { color: var(--accent-gold); }
         .grid-card:hover span { color: var(--pure-white); }
 
-        /* CHAT ROOM & AKUN MODE */
+        /* CHAT ROOM CONTAINER */
         .main-content {
             background: var(--pure-white);
             border-radius: 12px;
@@ -234,6 +234,7 @@
             border-top: 4px solid var(--bg-dark-green);
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             margin-bottom: 20px;
+            overflow: hidden;
         }
 
         .chat-header {
@@ -256,13 +257,14 @@
 
         /* CHAT DISPLAY BOX */
         .chat-box {
-            height: 220px;
+            height: 240px;
             border: 1px solid #e2e8e5;
             border-radius: 10px;
             padding: 10px;
             overflow-y: auto;
             background: #fafcfb;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            display: block !important;
         }
 
         .chat-item {
@@ -297,6 +299,7 @@
             border-radius: 0 10px 10px 10px;
             font-size: 0.8rem;
             color: #2c3e50;
+            word-break: break-word;
         }
 
         .chat-username {
@@ -306,7 +309,6 @@
             margin-bottom: 2px;
         }
 
-        /* TIMESTAMP DENGAN TANGGAL & JAM KECIL */
         .chat-meta {
             font-size: 0.62rem;
             color: #888888;
@@ -317,21 +319,23 @@
             gap: 4px;
         }
 
-        /* INPUT PESAN (AKTIF JIKA LOGGED IN) */
+        /* INPUT CHAT PERBAIKAN RESPONSIVE FLEXBOX */
         .chat-send-form {
             display: flex;
             gap: 6px;
-            margin-top: 8px;
+            margin-top: 10px;
+            width: 100%;
+            align-items: center;
         }
 
         .chat-send-form input {
             flex: 1;
-            padding: 8px 12px;
+            min-width: 0; /* PERBAIKAN BUG OVERFLOW MOBILE */
+            padding: 9px 12px;
             border: 1.5px solid #dcdfe1;
             border-radius: 8px;
             outline: none;
             font-size: 0.8rem;
-            transition: border-color 0.2s;
         }
 
         .chat-send-form input:focus {
@@ -342,19 +346,23 @@
             background: var(--bg-dark-green);
             color: var(--pure-white);
             border: none;
-            padding: 8px 14px;
+            padding: 9px 14px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
             font-size: 0.8rem;
-            transition: background 0.2s;
+            flex-shrink: 0; /* PERBAIKAN agar tombol tidak menciut/terdorong keluar */
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .btn-send:hover {
             background: var(--secondary-green);
         }
 
-        /* WELCOME BANNER (MUNCUL SAAT LOGGED IN) */
+        /* WELCOME BANNER */
         .welcome-banner {
             background: #f0f7f3;
             border: 1px solid #d4e6db;
@@ -367,27 +375,28 @@
             justify-content: space-between;
             align-items: center;
             margin-top: 10px;
+            gap: 8px;
         }
 
         .btn-logout {
             background: #e74c3c;
             color: #fff;
             border: none;
-            padding: 3px 10px;
+            padding: 4px 10px;
             border-radius: 5px;
             font-size: 0.68rem;
             font-weight: 600;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
-        /* UI AUTH/LOGIN DENGAN TAMPILAN KEREN DI BAWAH CHAT */
+        /* FORM LOGIN & REGISTER */
         .auth-box {
             background: #ffffff;
             border: 1px solid #e2e8e5;
             padding: 12px 14px;
             border-radius: 10px;
             margin-top: 10px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
 
         .auth-tabs {
@@ -405,7 +414,6 @@
             cursor: pointer;
             position: relative;
             padding-bottom: 4px;
-            transition: color 0.2s;
         }
 
         .auth-tab.active {
@@ -431,6 +439,7 @@
 
         .input-group {
             position: relative;
+            width: 100%;
         }
 
         .input-group i {
@@ -449,7 +458,6 @@
             border-radius: 6px;
             font-size: 0.78rem;
             outline: none;
-            transition: border-color 0.2s;
         }
 
         .auth-inputs input:focus {
@@ -465,12 +473,7 @@
             font-size: 0.78rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
             margin-top: 2px;
-        }
-
-        .btn-auth:hover {
-            background: var(--secondary-green);
         }
 
         /* MODAL POPUP */
@@ -579,7 +582,7 @@
         <h1 class="header-title">ISTAL</h1>
         <p class="header-caption">istiqomah al barokah</p>
 
-        <!-- WAKTU SHOLAT PRESISI FIT 100% LAYAR -->
+        <!-- WAKTU SHOLAT -->
         <div class="prayer-container">
             <div class="prayer-bar">
                 <div class="prayer-item"><span>Subuh</span><strong>04:35</strong></div>
@@ -598,7 +601,7 @@
         </div>
     </div>
 
-    <!-- SLIDER DENGAN CORNER MELENGKUNG -->
+    <!-- SLIDER -->
     <div class="slider-section">
         <div class="slider-container">
             <div class="slider-wrapper" id="sliderWrapper">
@@ -641,7 +644,7 @@
             </div>
         </div>
 
-        <!-- CHAT ROOM + FITUR AKUN BERADA DI BAWAH CHAT -->
+        <!-- CHAT ROOM -->
         <div class="main-content">
             <div class="chat-header">
                 <div class="chat-title">
@@ -649,24 +652,22 @@
                 </div>
             </div>
 
-            <!-- CHAT DISPLAY BOX (TETAP TAMPIL UNTUK SEMUA ORANG) -->
-            <div class="chat-box" id="chatBox">
-                <!-- Pesan diproses dari LocalStorage -->
-            </div>
+            <!-- RUANG CHAT (TETAP TAMPIL SIKAP LOGOUT & LOGIN) -->
+            <div class="chat-box" id="chatBox"></div>
 
-            <!-- JIKA SUDAH LOGIN: FORM KIRIM CHAT -->
+            <!-- FORM KIRIM PESAN (MUNCUL JIKA SUDAH LOGIN) -->
             <div class="chat-send-form" id="chatSendForm" style="display: none;">
                 <input type="text" id="chatInputMsg" placeholder="Tulis pesan sapaan Anda...">
                 <button class="btn-send" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i> Kirim</button>
             </div>
 
-            <!-- JIKA SUDAH LOGIN: WELCOME BANNER & LOGOUT -->
+            <!-- BANNER WELCOME & LOGOUT -->
             <div class="welcome-banner" id="welcomeBanner">
-                <span>Selamat datang kembali, <strong id="userDisplayName"></strong>!</span>
+                <span>Halo, <strong id="userDisplayName"></strong>!</span>
                 <button class="btn-logout" onclick="logoutUser()">Keluar</button>
             </div>
 
-            <!-- JIKA BELUM LOGIN: FORM KEREN DI BAWAH CHAT -->
+            <!-- FORM LOGIN / REGISTER DI BAWAH CHAT (MUNCUL JIKA BELUM LOGIN) -->
             <div class="auth-box" id="authBox">
                 <div class="auth-tabs">
                     <span class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Masuk (Login)</span>
@@ -688,26 +689,19 @@
 
     </div>
 
-    <!-- MODAL POPUPS -->
-
-    <!-- Modal 1: Quotes Islam -->
+    <!-- MODALS -->
     <div class="modal" id="modalQuotes">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalQuotes')">&times;</span>
             <div class="modal-header"><i class="fa-solid fa-quote-left"></i> Quotes Islam Harian</div>
             <div class="modal-body">
-                <p class="arabic-text" style="font-size: 1.3rem; margin: 10px 0; color: var(--bg-dark-green);" id="quoteArabic">
-                    إِنَّ مَعَ الْعُسْرِ يُسْرًا
-                </p>
-                <p style="font-style: italic; color: #444; font-size: 0.8rem;" id="quoteText">
-                    "Sesungguhnya sesudah kesulitan itu ada kemudahan." (QS. Al-Insyirah: 6)
-                </p>
-                <button class="btn-send" style="margin-top: 12px;" onclick="randomQuote()">Acak Quote</button>
+                <p class="arabic-text" style="font-size: 1.3rem; margin: 10px 0; color: var(--bg-dark-green);" id="quoteArabic">إِنَّ مَعَ الْعُسْرِ يُسْرًا</p>
+                <p style="font-style: italic; color: #444; font-size: 0.8rem;" id="quoteText">"Sesungguhnya sesudah kesulitan itu ada kemudahan." (QS. Al-Insyirah: 6)</p>
+                <button class="btn-send" style="margin: 12px auto 0;" onclick="randomQuote()">Acak Quote</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal 2: Gallery -->
     <div class="modal" id="modalGallery">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalGallery')">&times;</span>
@@ -723,7 +717,6 @@
         </div>
     </div>
 
-    <!-- Modal 3: Sodaqoh -->
     <div class="modal" id="modalSodaqoh">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalSodaqoh')">&times;</span>
@@ -738,7 +731,6 @@
         </div>
     </div>
 
-    <!-- Modal 4: Surat Kegiatan -->
     <div class="modal" id="modalKegiatan">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalKegiatan')">&times;</span>
@@ -787,12 +779,11 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT CODE -->
+    <!-- JAVASCRIPT -->
     <script>
-        // 1. SLIDER AUTOMATIS (4 DETIK)
+        // 1. SLIDER
         let slideIndex = 0;
         const sliderWrapper = document.getElementById('sliderWrapper');
-
         function autoSlide() {
             slideIndex++;
             if (slideIndex > 2) slideIndex = 0;
@@ -801,40 +792,29 @@
         setInterval(autoSlide, 4000);
 
         // 2. MODAL CONTROLLER
-        function openModal(id) {
-            document.getElementById(id).style.display = 'flex';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         window.onclick = function(event) {
             const modals = document.getElementsByClassName('modal');
             for (let i = 0; i < modals.length; i++) {
-                if (event.target == modals[i]) {
-                    modals[i].style.display = "none";
-                }
+                if (event.target == modals[i]) modals[i].style.display = "none";
             }
         }
 
-        // 3. RANDOM QUOTES ISLAM
+        // 3. QUOTES ISLAM
         const quotesList = [
             { text: '"Sesungguhnya sesudah kesulitan itu ada kemudahan."', ref: '(QS. Al-Insyirah: 6)', ar: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا' },
             { text: '"Maka ingatlah kepada-Ku, Aku pun akan ingat kepadamu."', ref: '(QS. Al-Baqarah: 152)', ar: 'فَاذْكُرُونِي أَذْكُرْكُمْ' },
             { text: '"Sebaik-baik manusia adalah yang paling bermanfaat bagi orang lain."', ref: '(HR. Ahmad)', ar: 'خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ' }
         ];
-
         function randomQuote() {
             const idx = Math.floor(Math.random() * quotesList.length);
             document.getElementById('quoteText').innerText = `${quotesList[idx].text} ${quotesList[idx].ref}`;
             document.getElementById('quoteArabic').innerText = quotesList[idx].ar;
         }
 
-        /* 4. SISTEM AKUN & CHAT ROOM PERMANEN DENGAN WAKTU & TANGGAL */
-        let currentAuthMode = 'login'; // 'login' atau 'register'
-
-        // Default awal jika chat masih kosong
+        // 4. CHAT & AUTH SYSTEM
+        let currentAuthMode = 'login';
         const defaultChats = [
             { 
                 username: 'Admin ISTAL', 
@@ -845,14 +825,12 @@
         ];
 
         function initApp() {
-            // Load Chat Messages
             let chats = JSON.getItem('ISTAL_CHATS');
             if (!chats) {
                 localStorage.setItem('ISTAL_CHATS', JSON.stringify(defaultChats));
             }
             renderChats();
 
-            // Check User Session
             const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
             if (activeUser) {
                 showLoggedInUI(activeUser);
@@ -890,19 +868,16 @@
             let users = JSON.parse(localStorage.getItem('ISTAL_USERS')) || [];
 
             if (currentAuthMode === 'register') {
-                // Registrasi Baru
                 const exists = users.find(u => u.username.toLowerCase() === usernameInput.toLowerCase());
                 if (exists) {
-                    alert('Username sudah terdaftar! Silakan pilih nama lain atau login.');
+                    alert('Username sudah terdaftar! Silakan pilih nama lain.');
                     return;
                 }
                 users.push({ username: usernameInput, password: passwordInput });
                 localStorage.setItem('ISTAL_USERS', JSON.stringify(users));
                 localStorage.setItem('ISTAL_ACTIVE_USER', usernameInput);
-                alert('Akun berhasil dibuat!');
                 showLoggedInUI(usernameInput);
             } else {
-                // Login
                 const user = users.find(u => u.username.toLowerCase() === usernameInput.toLowerCase() && u.password === passwordInput);
                 if (user) {
                     localStorage.setItem('ISTAL_ACTIVE_USER', user.username);
@@ -918,6 +893,7 @@
             document.getElementById('welcomeBanner').style.display = 'flex';
             document.getElementById('userDisplayName').innerText = username;
             document.getElementById('chatSendForm').style.display = 'flex';
+            renderChats();
         }
 
         function showLoggedOutUI() {
@@ -926,6 +902,7 @@
             document.getElementById('chatSendForm').style.display = 'none';
             document.getElementById('authUsername').value = '';
             document.getElementById('authPassword').value = '';
+            renderChats();
         }
 
         function logoutUser() {
@@ -959,11 +936,13 @@
 
         function renderChats() {
             const chatBox = document.getElementById('chatBox');
+            if (!chatBox) return;
+
             let chats = JSON.parse(localStorage.getItem('ISTAL_CHATS')) || [];
             chatBox.innerHTML = '';
 
             chats.forEach(chat => {
-                const initial = chat.username.charAt(0).toUpperCase();
+                const initial = chat.username ? chat.username.charAt(0).toUpperCase() : '?';
                 const timeInfo = chat.time || '';
                 const dateInfo = chat.date || '';
 
@@ -987,7 +966,6 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        // Jalankan Inisialisasi saat Halaman Dimuat
         window.onload = initApp;
     </script>
 </body>
