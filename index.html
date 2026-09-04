@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ISTAL - Room Chat Realtime</title>
+    <title>ISTAL - Ngaji Keliling Antar Pemuda</title>
 
     <!-- FontAwesome Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -14,264 +14,375 @@
 
     <style>
         :root {
-            --bg-dark-green: #0d2014;
-            --card-bg: #152d1d;
-            --accent-gold: #ffd700;
-            --text-light: #e8f0eb;
-            --text-muted: #8ca393;
-            --chat-bubble-bg: #1c3b27;
-            --chat-bubble-admin: #1a422a;
-            --danger-red: #ff4d4d;
+            --primary-green: #0d331a;
+            --accent-green: #144d28;
+            --bg-light: #f4f6f5;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
+            --danger-red: #e74c3c;
+            --chat-bubble-bg: #f0f4f1;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-            background-color: var(--bg-dark-green);
-            color: var(--text-light);
+        body {
+            background-color: #1a1a1a;
+            color: var(--text-dark);
             display: flex;
             justify-content: center;
-            align-items: center;
+            min-height: 100vh;
         }
 
-        .chat-app {
+        .app-wrapper {
             width: 100%;
             max-width: 480px;
-            height: 100%;
-            height: 100dvh; /* Menggunakan dvh agar pas di layar HP dan input tidak terpotong */
+            background-color: var(--bg-light);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background: var(--card-bg);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
             position: relative;
+        }
+
+        /* Banner Atas */
+        .banner-container {
+            padding: 12px 16px;
+            background: #000;
+        }
+
+        .banner-card {
+            position: relative;
+            width: 100%;
+            height: 160px;
+            border-radius: 16px;
             overflow: hidden;
+            background: #000;
         }
 
-        @media (min-width: 500px) {
-            .chat-app {
-                height: 90vh;
-                border-radius: 16px;
-            }
+        .banner-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.75;
         }
 
-        /* Header */
+        .banner-text {
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.05rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* Navigasi Grid Menu (4 Tombol Putih) */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 12px 16px;
+        }
+
+        .menu-item {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 14px 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            cursor: pointer;
+            border: 1px solid #e5e7eb;
+            transition: transform 0.1s ease;
+        }
+
+        .menu-item:active {
+            transform: scale(0.95);
+        }
+
+        .menu-item i {
+            font-size: 1.4rem;
+            color: var(--primary-green);
+        }
+
+        .menu-item span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        /* Kartu Utama Chat (Ruang Sapa & Silaturahmi) */
+        .chat-section {
+            flex: 1;
+            background: var(--card-bg);
+            margin-top: 8px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #e5e7eb;
+            border-bottom: none;
+        }
+
         .chat-header {
-            padding: 14px 16px;
-            background: #09170e;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            flex-shrink: 0;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 12px;
         }
 
-        .chat-header-info h2 {
-            font-size: 1.1rem;
-            color: var(--text-light);
+        .chat-title {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 10px;
         }
 
-        .chat-header-info span {
-            font-size: 0.75rem;
-            color: #4cd964;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+        .chat-title i {
+            font-size: 1.5rem;
+            color: var(--primary-green);
         }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #4cd964;
-            border-radius: 50%;
-            display: inline-block;
+        .chat-title h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--primary-green);
+            line-height: 1.2;
         }
 
-        .user-tag {
+        /* Tombol Reset Chat Khusus Admin */
+        .btn-reset-chat {
+            background-color: var(--danger-red);
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
             font-size: 0.8rem;
-            background: rgba(255,255,255,0.1);
-            padding: 4px 10px;
-            border-radius: 12px;
+            font-weight: 600;
             cursor: pointer;
-            color: var(--accent-gold);
-            display: flex;
+            display: none; /* Otomatis 'flex' jika login sebagai suturist4l */
             align-items: center;
             gap: 6px;
         }
 
-        /* Chat Body */
+        /* Container Pesan Chat */
         .chat-box {
             flex: 1;
-            padding: 16px;
+            min-height: 280px;
+            max-height: 420px;
             overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            scroll-behavior: smooth;
+            background: #fafafa;
         }
 
-        .chat-item {
+        .chat-bubble-item {
             display: flex;
             gap: 10px;
             align-items: flex-start;
         }
 
-        .chat-avatar {
-            width: 36px;
-            height: 36px;
+        .user-avatar {
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            background: #2a4d35;
+            background-color: var(--primary-green);
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             flex-shrink: 0;
         }
 
-        .chat-content-wrapper {
-            max-width: 80%;
-            width: 100%;
+        .bubble-content {
+            background-color: var(--chat-bubble-bg);
+            padding: 8px 14px;
+            border-radius: 12px;
+            display: inline-block;
+            max-width: 85%;
         }
 
-        .chat-text-bg {
-            background: var(--chat-bubble-bg);
-            padding: 10px 14px;
-            border-radius: 4px 14px 14px 14px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            word-break: break-word;
-        }
-
-        .chat-username {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--accent-gold);
-            margin-bottom: 3px;
+        .bubble-username {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--primary-green);
+            margin-bottom: 2px;
             display: flex;
             align-items: center;
+            gap: 4px;
         }
 
-        .chat-meta {
+        .bubble-text {
+            font-size: 0.9rem;
+            color: #2c3e50;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+
+        .bubble-meta {
             font-size: 0.68rem;
             color: var(--text-muted);
             margin-top: 4px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 4px;
+            gap: 8px;
         }
 
-        /* Tombol Hapus Pesan (Admin Only) */
-        .btn-delete {
-            background: none;
-            border: none;
+        .btn-delete-msg {
             color: var(--danger-red);
             cursor: pointer;
-            font-size: 0.75rem;
-            opacity: 0.8;
-            padding: 2px 6px;
-            border-radius: 4px;
-            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            font-size: 0.72rem;
+            font-weight: 600;
         }
 
-        .btn-delete:hover {
-            opacity: 1;
-            background: rgba(255, 77, 77, 0.15);
-        }
-
-        /* Input Bar (Terkunci di Bawah) */
-        .chat-input-area {
-            padding: 12px 14px;
-            background: #09170e;
+        /* Area Input Chat */
+        .chat-input-row {
             display: flex;
             gap: 8px;
+            margin-top: 12px;
             align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            flex-shrink: 0;
         }
 
-        .chat-input-area input {
+        .chat-input-row input {
             flex: 1;
             padding: 12px 16px;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.15);
-            background: #13271a;
-            color: #fff;
-            font-size: 0.9rem;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
             outline: none;
+            font-size: 0.88rem;
+            background: #fff;
         }
 
-        .chat-input-area input:focus {
-            border-color: var(--accent-gold);
+        .chat-input-row input:focus {
+            border-color: var(--primary-green);
         }
 
-        .chat-input-area button {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
+        .btn-send {
+            background-color: var(--primary-green);
+            color: #fff;
             border: none;
-            background: var(--accent-gold);
-            color: #0d2014;
-            font-size: 1rem;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
             cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 6px;
             flex-shrink: 0;
-            transition: transform 0.1s ease;
         }
 
-        .chat-input-area button:active {
-            transform: scale(0.92);
+        .user-status-bar {
+            margin-bottom: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-status-bar span b {
+            color: var(--primary-green);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div class="chat-app">
-    <!-- Header -->
-    <div class="chat-header">
-        <div class="chat-header-info">
-            <h2><i class="fa-solid fa-comments" style="color: var(--accent-gold);"></i> Roomchat ISTAL</h2>
-            <span><i class="status-dot"></i> Online (Realtime)</span>
-        </div>
-        <div class="user-tag" onclick="changeUsername()" title="Klik untuk ganti nama">
-            <i class="fa-solid fa-user"></i> <span id="displayUsername">Anonim</span>
+<div class="app-wrapper">
+
+    <!-- 1. Banner Atas -->
+    <div class="banner-container">
+        <div class="banner-card">
+            <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=800&q=80" alt="Ngaji Keliling">
+            <div class="banner-text">Ngaji Keliling Antar Pemuda</div>
         </div>
     </div>
 
-    <!-- Chat Box -->
-    <div class="chat-box" id="chatBox">
-        <div style="text-align: center; color: var(--text-muted); padding: 40px 10px; font-size: 0.85rem;">
-            <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 8px;"></i><br>
-            Menghubungkan ke server...
+    <!-- 2. Grid Menu 4 Tombol Putih -->
+    <div class="menu-grid">
+        <div class="menu-item" onclick="alert('Fitur Video belum tersedia')">
+            <i class="fa-solid fa-circle-play"></i>
+            <span>Video</span>
+        </div>
+        <div class="menu-item" onclick="alert('Fitur Gallery belum tersedia')">
+            <i class="fa-solid fa-image"></i>
+            <span>Gallery</span>
+        </div>
+        <div class="menu-item" onclick="alert('Fitur Sodaqoh belum tersedia')">
+            <i class="fa-solid fa-qrcode"></i>
+            <span>Sodaqoh</span>
+        </div>
+        <div class="menu-item" onclick="alert('Fitur Surat Kegiatan belum tersedia')">
+            <i class="fa-solid fa-scroll"></i>
+            <span>Surat<br>Kegiatan</span>
         </div>
     </div>
 
-    <!-- Input Bar -->
-    <div class="chat-input-area">
-        <input type="text" id="chatInput" placeholder="Ketik pesan silaturahmi..." autocomplete="off">
-        <button id="sendBtn" onclick="sendChatMessage()">
-            <i class="fa-solid fa-paper-plane"></i>
-        </button>
+    <!-- 3. Section Ruang Sapa & Silaturahmi (Chat Realtime) -->
+    <div class="chat-section">
+        <div class="chat-header">
+            <div class="chat-title">
+                <i class="fa-solid fa-comments"></i>
+                <h3>Ruang Sapa &<br>Silaturahmi</h3>
+            </div>
+            <!-- Tombol Reset Chat khusus admin suturist4l -->
+            <button class="btn-reset-chat" id="btnResetChat" onclick="resetAllChats()">
+                <i class="fa-solid fa-trash-can"></i> Reset Chat
+            </button>
+        </div>
+
+        <div class="user-status-bar">
+            <span>Login sebagai: <b id="displayUsername" onclick="changeUsername()" title="Klik untuk ganti">Anonim</b></span>
+            <span><i class="fa-solid fa-circle" style="color: #2ecc71; font-size: 0.6rem;"></i> Realtime</span>
+        </div>
+
+        <!-- Box Daftar Chat -->
+        <div class="chat-box" id="chatBox">
+            <div style="text-align: center; color: var(--text-muted); padding: 30px; font-size: 0.85rem;">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.2rem; margin-bottom: 6px;"></i><br>
+                Memuat pesan...
+            </div>
+        </div>
+
+        <!-- Input Chat & Kirim -->
+        <div class="chat-input-row">
+            <input type="text" id="chatInput" placeholder="Tulis pesan sapaan Anda..." autocomplete="off">
+            <button class="btn-send" onclick="sendChatMessage()">
+                <i class="fa-solid fa-paper-plane"></i> Kirim
+            </button>
+        </div>
     </div>
+
 </div>
 
 <script>
-    // 1. Firebase Config
+    // 1. Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyChUPdkwJx8yGsOCofb8iTtVWaxysRB7mc",
         authDomain: "istalapp-8325d.firebaseapp.com",
@@ -288,13 +399,19 @@
 
     const ADMIN_USERNAME = 'suturist4l';
 
-    // 2. Local Storage User Management
+    // 2. User Management
     let currentUser = localStorage.getItem('CURRENT_USER');
     if (!currentUser) {
-        currentUser = prompt("Masukkan Username Anda:") || "User_" + Math.floor(Math.random() * 1000);
+        currentUser = prompt("Masukkan Username Anda:") || "istalalbarokah";
         localStorage.setItem('CURRENT_USER', currentUser);
     }
     document.getElementById('displayUsername').innerText = currentUser;
+
+    // Cek Akses Admin untuk Menampilkan Tombol Reset Chat
+    const isCurrentAdmin = (currentUser.toLowerCase() === ADMIN_USERNAME.toLowerCase());
+    if (isCurrentAdmin) {
+        document.getElementById('btnResetChat').style.display = 'flex';
+    }
 
     function changeUsername() {
         const newName = prompt("Masukkan Username baru:", currentUser);
@@ -306,7 +423,7 @@
         }
     }
 
-    // Anti XSS
+    // Helper Anti XSS
     function escapeHtml(text) {
         return text
             .replace(/&/g, "&amp;")
@@ -316,7 +433,7 @@
             .replace(/'/g, "&#039;");
     }
 
-    // 3. Kirim Pesan
+    // 3. Kirim Pesan Ke Database
     function sendChatMessage() {
         const inputEl = document.getElementById('chatInput');
         const text = inputEl.value.trim();
@@ -324,7 +441,7 @@
 
         const now = new Date();
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+        const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
         chatRef.push({
             username: currentUser,
@@ -335,26 +452,36 @@
         }).then(() => {
             inputEl.value = '';
         }).catch((err) => {
-            alert('Gagal mengirim: ' + err.message);
+            alert('Gagal mengirim pesan: ' + err.message);
         });
     }
 
-    // 4. Hapus Pesan (Khusus Admin suturist4l)
+    // 4. Hapus Pesan Satuan (Admin Only)
     function deleteChatMessage(key) {
         if (!key) return;
-        if (confirm("Yakin ingin menghapus pesan ini?")) {
-            chatRef.child(key).remove().catch((err) => {
-                alert("Gagal menghapus: " + err.message);
+        if (confirm("Hapus pesan ini?")) {
+            chatRef.child(key).remove();
+        }
+    }
+
+    // 5. Reset Semua Chat (Admin Only)
+    function resetAllChats() {
+        if (!isCurrentAdmin) return;
+        if (confirm("Apakah Anda yakin ingin menghapus SELURUH isi chat?")) {
+            chatRef.remove().then(() => {
+                alert("Semua chat berhasil dibersihkan!");
+            }).catch((err) => {
+                alert("Gagal reset chat: " + err.message);
             });
         }
     }
 
-    // Enter Key Listener
+    // Listener Tombol Enter
     document.getElementById('chatInput').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') sendChatMessage();
     });
 
-    // 5. Realtime Database Listener
+    // 6. Listener Realtime Firebase
     chatRef.on('value', (snapshot) => {
         const chatBox = document.getElementById('chatBox');
         const data = snapshot.val();
@@ -362,7 +489,6 @@
         if (!data) {
             chatBox.innerHTML = `
                 <div style="text-align: center; color: var(--text-muted); padding: 40px 10px; font-size: 0.85rem;">
-                    <i class="fa-solid fa-comments" style="font-size: 2rem; margin-bottom: 8px; opacity: 0.3;"></i><br>
                     Belum ada pesan silaturahmi.
                 </div>
             `;
@@ -370,7 +496,6 @@
         }
 
         let htmlContent = '';
-        const isCurrentAdmin = (currentUser.toLowerCase() === ADMIN_USERNAME.toLowerCase());
 
         Object.keys(data).forEach(key => {
             const chat = data[key];
@@ -381,30 +506,24 @@
             const safeText = escapeHtml(chat.text || '');
 
             const isMsgFromAdmin = (username.toLowerCase() === ADMIN_USERNAME.toLowerCase());
-            
-            // Centang biru untuk pesan dari admin
             const verifiedBadge = isMsgFromAdmin 
-                ? `<i class="fa-solid fa-circle-check" style="color: #1DA1F2; margin-left: 4px; font-size: 0.82rem;" title="Terverifikasi Admin"></i>` 
+                ? `<i class="fa-solid fa-circle-check" style="color: #1DA1F2; font-size: 0.8rem;" title="Admin"></i>` 
                 : '';
 
-            const avatarStyle = isMsgFromAdmin ? 'style="background: var(--accent-gold); color: #0d2014;"' : '';
-            const bubbleStyle = isMsgFromAdmin ? 'style="background: var(--chat-bubble-admin); border: 1px solid rgba(255,215,0,0.2);"' : '';
-
-            // Tombol hapus HANYA dirender jika pengguna login sebagai suturist4l
             const deleteBtn = isCurrentAdmin 
-                ? `<button class="btn-delete" onclick="deleteChatMessage('${key}')" title="Hapus pesan"><i class="fa-solid fa-trash"></i> Hapus</button>` 
+                ? `<button class="btn-delete-msg" onclick="deleteChatMessage('${key}')"><i class="fa-solid fa-trash"></i></button>` 
                 : '';
 
             htmlContent += `
-                <div class="chat-item">
-                    <div class="chat-avatar" ${avatarStyle}>${initial}</div>
-                    <div class="chat-content-wrapper">
-                        <div class="chat-text-bg" ${bubbleStyle}>
-                            <div class="chat-username">${escapeHtml(username)}${verifiedBadge}</div>
-                            <div>${safeText}</div>
+                <div class="chat-bubble-item">
+                    <div class="user-avatar">${initial}</div>
+                    <div>
+                        <div class="bubble-content">
+                            <div class="bubble-username">${escapeHtml(username)} ${verifiedBadge}</div>
+                            <div class="bubble-text">${safeText}</div>
                         </div>
-                        <div class="chat-meta">
-                            <span><i class="fa-regular fa-clock"></i> ${timeInfo} ${dateInfo ? '• ' + dateInfo : ''}</span>
+                        <div class="bubble-meta">
+                            <span><i class="fa-regular fa-clock"></i> ${timeInfo} • ${dateInfo}</span>
                             ${deleteBtn}
                         </div>
                     </div>
