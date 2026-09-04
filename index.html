@@ -845,291 +845,186 @@
 
     <!-- JAVASCRIPT SYSTEM -->
     <script>
-        // SLIDER AUTOMATIS
-        let slideIndex = 0;
-        const sliderWrapper = document.getElementById('sliderWrapper');
-        function autoSlide() {
-            slideIndex++;
-            if (slideIndex > 2) slideIndex = 0;
-            sliderWrapper.style.transform = `translateX(-${slideIndex * 33.333}%)`;
-        }
-        setInterval(autoSlide, 4000);
+    // 1. Konfigurasi Firebase Realtime Database
+    const firebaseConfig = {
+        apiKey: "AIzaSyChUPdkwJx8yGsOCofb8iTtVWaxysRB7mc",
+        authDomain: "istalapp-8325d.firebaseapp.com",
+        databaseURL: "https://istalapp-8325d-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "istalapp-8325d",
+        storageBucket: "istalapp-8325d.firebasestorage.app",
+        messagingSenderId: "167010805275",
+        appId: "1:167010805275:web:b0bc9ab21edcf5dbee7abe"
+    };
 
-        // AKUN & CHAT SYSTEM
-        let currentAuthMode = 'login';
-        
-        // AKUN ADMIN RESMI
-        const ADMIN_USERNAME = 'suturist4l';
-        const ADMIN_PASSWORD = 'suturist4l';
+    // Inisialisasi Firebase
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const database = firebase.database();
+    const chatRef = database.ref('chats');
+    const usersRef = database.ref('users');
 
-        const defaultChats = [
-            { 
-                username: 'Admin ISTAL', 
-                text: "Assalamu'alaikum kawan-kawan! Selamat berkunjung di aplikasi ISTAL.", 
-                time: '08:00',
-                date: '03/09/2026'
+    const ADMIN_USERNAME = 'suturist4l';
+    let currentUser = '';
+
+    // 2. Fitur Login & Manajemen User
+    function initLogin() {
+        currentUser = localStorage.getItem('CURRENT_USER');
+
+        if (!currentUser) {
+            let inputName = prompt("Masukkan Username Anda untuk bergabung:");
+            if (!inputName || inputName.trim() === "") {
+                inputName = "User_" + Math.floor(1000 + Math.random() * 9000);
             }
-        ];
-
-        // DEFAULT FOTO GALERI
-        const defaultGallery = [
-            { id: 101, url: 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=400&q=80' },
-            { id: 102, url: 'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=400&q=80' },
-            { id: 103, url: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=400&q=80' },
-            { id: 104, url: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=400&q=80' }
-        ];
-
-        function initApp() {
-            try {
-                if (localStorage.getItem('ISTAL_CHATS') === null) {
-                    localStorage.setItem('ISTAL_CHATS', JSON.stringify(defaultChats));
-                }
-
-                if (localStorage.getItem('ISTAL_GALLERY') === null) {
-                    localStorage.setItem('ISTAL_GALLERY', JSON.stringify(defaultGallery));
-                }
-
-                renderChats();
-                renderGallery();
-
-                const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
-                if (activeUser) {
-                    showLoggedInUI(activeUser);
-                } else {
-                    showLoggedOutUI();
-                }
-            } catch (err) {
-                console.error("Initialization Error:", err);
-                renderChats();
-                renderGallery();
-                showLoggedOutUI();
-            }
+            currentUser = inputName.trim();
+            localStorage.setItem('CURRENT_USER', currentUser);
         }
 
-        // MODAL CONTROLLER
-        function openModal(id) { 
-            document.getElementById(id).style.display = 'flex'; 
-            if (id === 'modalGallery') {
-                renderGallery();
-            }
+        // Simpan/perbarui status user di Firebase Realtime Database
+        usersRef.child(currentUser.replace(/[.#$/[\]]/g, "_")).set({
+            username: currentUser,
+            lastLogin: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        // Tampilkan username di UI
+        document.getElementById('displayUsername').innerText = currentUser;
+
+        // Tampilkan tombol reset chat jika login sebagai admin
+        const isCurrentAdmin = (currentUser.toLowerCase() === ADMIN_USERNAME.toLowerCase());
+        const btnReset = document.getElementById('btnResetChat');
+        if (btnReset) {
+            btnReset.style.display = isCurrentAdmin ? 'flex' : 'none';
         }
+    }
 
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        function openFullImage(url) {
-            document.getElementById('imgFullViewer').src = url;
-            openModal('modalFullImage');
+    // Ganti Username
+    function changeUsername() {
+        const newName = prompt("Masukkan Username baru:", currentUser);
+        if (newName && newName.trim() !== "" && newName.trim() !== currentUser) {
+            currentUser = newName.trim();
+            localStorage.setItem('CURRENT_USER', currentUser);
+            document.getElementById('displayUsername').innerText = currentUser;
+            initLogin(); // Refresh status user
         }
-        
-        window.onclick = function(event) {
-            const modals = document.getElementsByClassName('modal');
-            for (let i = 0; i < modals.length; i++) {
-                if (event.target == modals[i]) modals[i].style.display = "none";
-            }
-        }
+    }
 
-        function switchAuthTab(mode) {
-            currentAuthMode = mode;
-            const tabLogin = document.getElementById('tabLogin');
-            const tabRegister = document.getElementById('tabRegister');
-            const btnSubmit = document.getElementById('btnAuthSubmit');
+    // Anti XSS Injection
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.innerText = text;
+        return div.innerHTML;
+    }
 
-            if (mode === 'login') {
-                tabLogin.classList.add('active');
-                tabRegister.classList.remove('active');
-                btnSubmit.innerText = 'Masuk Ke Chat';
-            } else {
-                tabRegister.classList.add('active');
-                tabLogin.classList.remove('active');
-                btnSubmit.innerText = 'Daftar Akun Baru';
-            }
-        }
+    // 3. Fitur Kirim Pesan Chat
+    function sendChatMessage() {
+        const inputEl = document.getElementById('chatInput');
+        const text = inputEl.value.trim();
+        if (!text) return;
 
-        function handleAuth() {
-            try {
-                const usernameInput = document.getElementById('authUsername').value.trim();
-                const passwordInput = document.getElementById('authPassword').value.trim();
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-                if (!usernameInput || !passwordInput) {
-                    alert('Harap isi Username dan Kata Sandi!');
-                    return;
-                }
+        // Push data pesan baru ke Firebase Realtime Database
+        chatRef.push({
+            username: currentUser,
+            text: text,
+            time: timeStr,
+            date: dateStr,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        }).then(() => {
+            inputEl.value = '';
+        }).catch((err) => {
+            alert('Gagal mengirim pesan: ' + err.message);
+        });
+    }
 
-                // Cek Login Khusus Admin
-                if (currentAuthMode === 'login' && usernameInput.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
-                    if (passwordInput === ADMIN_PASSWORD) {
-                        localStorage.setItem('ISTAL_ACTIVE_USER', ADMIN_USERNAME);
-                        showLoggedInUI(ADMIN_USERNAME);
-                        alert('Selamat datang Admin suturist4l! Fitur Upload Foto Galeri telah aktif.');
-                        return;
-                    } else {
-                        alert('Kata Sandi Admin Salah!');
-                        return;
-                    }
-                }
-
-                // Proteksi Registrasi Username Admin
-                if (currentAuthMode === 'register' && usernameInput.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
-                    alert('Username ini diproteksi khusus Admin!');
-                    return;
-                }
-
-                // Ambil daftar user biasa
-                let users = JSON.parse(localStorage.getItem('ISTAL_USERS')) || [];
-                if (!Array.isArray(users)) users = [];
-
-                if (currentAuthMode === 'register') {
-                    const exists = users.find(u => u && u.username && u.username.toLowerCase() === usernameInput.toLowerCase());
-                    if (exists) {
-                        alert('Username sudah terdaftar! Silakan pilih nama lain.');
-                        return;
-                    }
-
-                    users.push({ username: usernameInput, password: passwordInput });
-                    localStorage.setItem('ISTAL_USERS', JSON.stringify(users));
-                    localStorage.setItem('ISTAL_ACTIVE_USER', usernameInput);
-                    showLoggedInUI(usernameInput);
-                    alert('Akun berhasil dibuat!');
-                } else {
-                    // Login User Biasa
-                    const user = users.find(u => u && u.username && u.username.toLowerCase() === usernameInput.toLowerCase() && u.password === passwordInput);
-                    if (user) {
-                        localStorage.setItem('ISTAL_ACTIVE_USER', user.username);
-                        showLoggedInUI(user.username);
-                    } else {
-                        alert('Username atau Kata Sandi salah!');
-                    }
-                }
-            } catch (err) {
-                console.error("Auth Error:", err);
-                alert("Terjadi kesalahan sistem.");
-            }
-        }
-
-        function showLoggedInUI(username) {
-            document.getElementById('authBox').style.display = 'none';
-            document.getElementById('welcomeBanner').style.display = 'flex';
-            document.getElementById('userDisplayName').innerText = username;
-            document.getElementById('chatSendForm').style.display = 'flex';
-
-            const btnReset = document.getElementById('btnAdminReset');
-            if (btnReset) {
-                const isAdmin = (username.toLowerCase() === ADMIN_USERNAME.toLowerCase());
-                btnReset.style.display = isAdmin ? 'inline-block' : 'none';
-            }
-
-            renderChats();
-            renderGallery();
-        }
-
-        function showLoggedOutUI() {
-            document.getElementById('authBox').style.display = 'block';
-            document.getElementById('welcomeBanner').style.display = 'none';
-            document.getElementById('chatSendForm').style.display = 'none';
-
-            const btnReset = document.getElementById('btnAdminReset');
-            if (btnReset) btnReset.style.display = 'none';
-
-            renderChats();
-            renderGallery();
-        }
-
-        function logoutUser() {
-            localStorage.removeItem('ISTAL_ACTIVE_USER');
-            location.reload();
-        }
-
-        function resetChatByAdmin() {
-            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
-            
-            if (!activeUser || activeUser.toLowerCase() !== ADMIN_USERNAME.toLowerCase()) {
-                alert('Akses ditolak! Hanya akun Admin (suturist4l) yang dapat menghapus seluruh chat.');
-                return;
-            }
-
-            if (confirm('Apakah Anda yakin ingin menghapus SELURUH pesan chat secara permanen?')) {
-                localStorage.setItem('ISTAL_CHATS', JSON.stringify([]));
-                renderChats();
-                alert('Semua pesan chat berhasil dibersihkan!');
-            }
-        }
-
-        function sendChatMessage() {
-            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
-            const msgInput = document.getElementById('chatInputMsg');
-            const text = msgInput.value.trim();
-
-            if (!text || !activeUser) return;
-
-            const now = new Date();
-            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-            const dateStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
-
-            let chats = JSON.parse(localStorage.getItem('ISTAL_CHATS')) || [];
-            if (!Array.isArray(chats)) chats = [];
-
-            chats.push({ 
-                username: activeUser, 
-                text: text, 
-                time: timeStr,
-                date: dateStr 
+    // 4. Fitur Hapus Pesan Satuan (Admin Only)
+    function deleteChatMessage(key) {
+        if (!key) return;
+        if (confirm("Hapus pesan ini dari database?")) {
+            chatRef.child(key).remove().catch((err) => {
+                alert("Gagal menghapus pesan: " + err.message);
             });
+        }
+    }
 
-            localStorage.setItem('ISTAL_CHATS', JSON.stringify(chats));
+    // 5. Fitur Reset Semua Chat (Admin Only)
+    function resetAllChats() {
+        const isCurrentAdmin = (currentUser.toLowerCase() === ADMIN_USERNAME.toLowerCase());
+        if (!isCurrentAdmin) return;
 
-            msgInput.value = '';
-            renderChats();
+        if (confirm("Apakah Anda yakin ingin menghapus SELURUH isi chat?")) {
+            chatRef.remove().then(() => {
+                alert("Semua chat berhasil dibersihkan!");
+            }).catch((err) => {
+                alert("Gagal reset chat: " + err.message);
+            });
+        }
+    }
+
+    // Enter Key Listener untuk kolom input
+    document.getElementById('chatInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') sendChatMessage();
+    });
+
+    // 6. Listener Realtime (Mendengarkan Perubahan Data Chat di Firebase)
+    chatRef.on('value', (snapshot) => {
+        const chatBox = document.getElementById('chatBox');
+        const data = snapshot.val();
+
+        if (!data) {
+            chatBox.innerHTML = `
+                <div style="text-align: center; color: #6b7280; padding: 40px 10px; font-size: 0.85rem;">
+                    Belum ada pesan silaturahmi.
+                </div>
+            `;
+            return;
         }
 
-        function renderChats() {
-            const chatBox = document.getElementById('chatBox');
-            if (!chatBox) return;
+        let htmlContent = '';
+        const isCurrentAdmin = (currentUser.toLowerCase() === ADMIN_USERNAME.toLowerCase());
 
-            let rawChats = localStorage.getItem('ISTAL_CHATS');
-            let chats = [];
-            try {
-                chats = rawChats ? JSON.parse(rawChats) : [];
-            } catch(e) {
-                chats = [];
-            }
+        Object.keys(data).forEach(key => {
+            const chat = data[key];
+            const username = chat.username || 'Anonim';
+            const initial = username.charAt(0).toUpperCase();
+            const timeInfo = chat.time || '';
+            const dateInfo = chat.date || '';
+            const safeText = escapeHtml(chat.text || '');
 
-            if (!Array.isArray(chats) || chats.length === 0) {
-                chatBox.innerHTML = `
-                    <div style="text-align: center; color: #888; padding: 40px 10px; font-size: 0.8rem;">
-                        <i class="fa-solid fa-comments" style="font-size: 2rem; margin-bottom: 8px; color: #ccc;"></i><br>
-                        Belum ada pesan silaturahmi.
-                    </div>
-                `;
-                return;
-            }
+            const isMsgFromAdmin = (username.toLowerCase() === ADMIN_USERNAME.toLowerCase());
+            const verifiedBadge = isMsgFromAdmin 
+                ? `<i class="fa-solid fa-circle-check" style="color: #1DA1F2; font-size: 0.8rem;" title="Admin"></i>` 
+                : '';
 
-            let htmlContent = '';
-            chats.forEach(chat => {
-                const username = chat.username || 'Anonim';
-                const initial = username.charAt(0).toUpperCase();
-                const timeInfo = chat.time || '';
-                const dateInfo = chat.date || '';
+            const deleteBtn = isCurrentAdmin 
+                ? `<button class="btn-delete-msg" onclick="deleteChatMessage('${key}')"><i class="fa-solid fa-trash"></i></button>` 
+                : '';
 
-                htmlContent += `
-                    <div class="chat-item">
-                        <div class="chat-avatar">${initial}</div>
-                        <div class="chat-content-wrapper">
-                            <div class="chat-text-bg">
-                                <div class="chat-username">${username}</div>
-                                <div>${chat.text}</div>
-                            </div>
-                            <div class="chat-meta">
-                                <i class="fa-regular fa-clock"></i> ${timeInfo} ${dateInfo ? '• ' + dateInfo : ''}
-                            </div>
+            htmlContent += `
+                <div class="chat-bubble-item">
+                    <div class="user-avatar">${initial}</div>
+                    <div>
+                        <div class="bubble-content">
+                            <div class="bubble-username">${escapeHtml(username)} ${verifiedBadge}</div>
+                            <div class="bubble-text">${safeText}</div>
+                        </div>
+                        <div class="bubble-meta">
+                            <span><i class="fa-regular fa-clock"></i> ${timeInfo} • ${dateInfo}</span>
+                            ${deleteBtn}
                         </div>
                     </div>
-                `;
-            });
+                </div>
+            `;
+        });
 
-            chatBox.innerHTML = htmlContent;
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+        chatBox.innerHTML = htmlContent;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
 
+    // Jalankan inisialisasi login saat halaman dimuat
+    window.onload = initLogin;
         // ==========================================
         // FITUR UPLOAD & MANAJEMEN GALERI FOTO ADMIN
         // ==========================================
