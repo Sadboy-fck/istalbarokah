@@ -2,19 +2,19 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISTAL - Room Chat Realtime</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ISTAL Mobile App</title>
 
     <!-- FontAwesome Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Firebase SDK (Compat Version untuk Web Browser) -->
+    <!-- Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <style>
         :root {
-            --bg-dark-green: #0d2014;
+            --bg-dark: #0d2014;
             --card-bg: #152d1d;
             --accent-gold: #ffd700;
             --text-light: #e8f0eb;
@@ -22,6 +22,7 @@
             --chat-bubble-bg: #1c3b27;
             --chat-bubble-admin: #1a422a;
             --danger-red: #ff4d4d;
+            --nav-bg: #09170e;
         }
 
         * {
@@ -29,59 +30,178 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        body {
-            background-color: var(--bg-dark-green);
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: var(--bg-dark);
             color: var(--text-light);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
         }
 
-        .chat-app {
+        /* Container Aplikasi Utama */
+        .app-container {
             width: 100%;
             max-width: 480px;
-            height: 100vh;
+            height: 100%;
+            height: 100dvh; /* Presisi di browser HP */
             display: flex;
             flex-direction: column;
             background: var(--card-bg);
             box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            position: relative;
         }
 
         @media (min-width: 500px) {
-            .chat-app {
+            .app-container {
                 height: 90vh;
                 border-radius: 16px;
                 overflow: hidden;
             }
         }
 
-        /* Header */
-        .chat-header {
-            padding: 16px;
-            background: #09170e;
+        /* Header Aplikasi */
+        .app-header {
+            padding: 14px 16px;
+            background: var(--nav-bg);
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid rgba(255,255,255,0.08);
+            z-index: 10;
         }
 
-        .chat-header-info h2 {
+        .app-header h1 {
             font-size: 1.1rem;
             color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-badge {
+            font-size: 0.8rem;
+            background: rgba(255,255,255,0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--accent-gold);
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .chat-header-info span {
+        /* Area Konten Utama */
+        .content-area {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-content {
+            display: none;
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        /* --- DASHBOARD / MENU ISTAL --- */
+        .menu-grid-container {
+            flex: 1;
+            padding: 20px 16px;
+            overflow-y: auto;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #1c3b27, #0d2014);
+            border: 1px solid rgba(255,215,0,0.2);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-card h2 {
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+            margin-bottom: 6px;
+        }
+
+        .welcome-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .menu-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .menu-card:active {
+            transform: scale(0.96);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .menu-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: #1c3b27;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .menu-card span {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* --- ROOM CHAT ISTAL --- */
+        .chat-sub-header {
+            padding: 8px 16px;
+            background: rgba(0,0,0,0.2);
             font-size: 0.75rem;
             color: #4cd964;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
         .status-dot {
@@ -89,19 +209,8 @@
             height: 8px;
             background-color: #4cd964;
             border-radius: 50%;
-            display: inline-block;
         }
 
-        .user-tag {
-            font-size: 0.8rem;
-            background: rgba(255,255,255,0.1);
-            padding: 4px 10px;
-            border-radius: 12px;
-            cursor: pointer;
-            color: var(--accent-gold);
-        }
-
-        /* Chat Body */
         .chat-box {
             flex: 1;
             padding: 16px;
@@ -165,28 +274,20 @@
             gap: 4px;
         }
 
-        /* Tombol Hapus Khusus Admin */
         .btn-delete {
             background: none;
             border: none;
             color: var(--danger-red);
             cursor: pointer;
             font-size: 0.75rem;
-            opacity: 0.7;
+            opacity: 0.8;
             padding: 2px 6px;
             border-radius: 4px;
-            transition: all 0.2s ease;
         }
 
-        .btn-delete:hover {
-            opacity: 1;
-            background: rgba(255, 77, 77, 0.15);
-        }
-
-        /* Input Bar */
         .chat-input-area {
-            padding: 12px 16px;
-            background: #09170e;
+            padding: 10px 14px;
+            background: var(--nav-bg);
             display: flex;
             gap: 8px;
             align-items: center;
@@ -209,8 +310,8 @@
         }
 
         .chat-input-area button {
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             border: none;
             background: var(--accent-gold);
@@ -220,47 +321,123 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.1s ease;
+            flex-shrink: 0;
         }
 
-        .chat-input-area button:active {
-            transform: scale(0.92);
+        /* NAVIGASI BAWAH (TAB MENU) */
+        .bottom-nav {
+            height: 60px;
+            background: var(--nav-bg);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .nav-item {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .nav-item i {
+            font-size: 1.1rem;
+        }
+
+        .nav-item.active {
+            color: var(--accent-gold);
         }
     </style>
 </head>
 <body>
 
-<div class="chat-app">
+<div class="app-container">
     <!-- Header -->
-    <div class="chat-header">
-        <div class="chat-header-info">
-            <h2><i class="fa-solid fa-comments" style="color: var(--accent-gold);"></i> Roomchat ISTAL</h2>
-            <span><i class="status-dot"></i> Online (Realtime)</span>
-        </div>
-        <div class="user-tag" onclick="changeUsername()" title="Klik untuk ganti nama">
-            <i class="fa-solid fa-user"></i> <span id="displayUsername">Anonim</span>
+    <div class="app-header">
+        <h1><i class="fa-solid fa-layer-group" style="color: var(--accent-gold);"></i> ISTAL Hub</h1>
+        <div class="user-badge" onclick="changeUsername()" title="Ganti Username">
+            <i class="fa-solid fa-circle-user"></i> <span id="displayUsername">Anonim</span>
         </div>
     </div>
 
-    <!-- Chat Box -->
-    <div class="chat-box" id="chatBox">
-        <div style="text-align: center; color: var(--text-muted); padding: 40px 10px; font-size: 0.85rem;">
-            <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 8px;"></i><br>
-            Menghubungkan ke server...
+    <!-- Area Konten -->
+    <div class="content-area">
+        
+        <!-- TAB 1: MENU UTAMA ISTAL -->
+        <div class="tab-content active" id="tabMenu">
+            <div class="menu-grid-container">
+                <div class="welcome-card">
+                    <h2>Selamat Datang!</h2>
+                    <p>Aplikasi ISTAL siap digunakan. Pilih fitur atau masuk ke Roomchat untuk berdiskusi secara realtime.</p>
+                </div>
+
+                <div class="section-title">Menu Utama</div>
+                <div class="menu-grid">
+                    <div class="menu-card" onclick="switchTab('chat')">
+                        <div class="menu-icon"><i class="fa-solid fa-comments"></i></div>
+                        <span>Roomchat</span>
+                    </div>
+                    <div class="menu-card" onclick="alert('Fitur Servis Ponsel dalam pengembangan.')">
+                        <div class="menu-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                        <span>Servis Hardware</span>
+                    </div>
+                    <div class="menu-card" onclick="alert('Fitur Sablon dalam pengembangan.')">
+                        <div class="menu-icon"><i class="fa-solid fa-shirt"></i></div>
+                        <span>Sablon Studio</span>
+                    </div>
+                    <div class="menu-card" onclick="changeUsername()">
+                        <div class="menu-icon"><i class="fa-solid fa-user-gear"></i></div>
+                        <span>Ganti Akun</span>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- TAB 2: ROOM CHAT REALTIME -->
+        <div class="tab-content" id="tabChat">
+            <div class="chat-sub-header">
+                <span class="status-dot"></span> Firebase Realtime Connected
+            </div>
+
+            <div class="chat-box" id="chatBox">
+                <div style="text-align: center; color: var(--text-muted); padding: 40px 10px; font-size: 0.85rem;">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 8px;"></i><br>
+                    Menghubungkan pesan...
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Ketik pesan..." autocomplete="off">
+                <button onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Input Bar -->
-    <div class="chat-input-area">
-        <input type="text" id="chatInput" placeholder="Ketik pesan silaturahmi..." autocomplete="off">
-        <button id="sendBtn" onclick="sendChatMessage()">
-            <i class="fa-solid fa-paper-plane"></i>
-        </button>
+    <!-- Navigasi Bawah -->
+    <div class="bottom-nav">
+        <div class="nav-item active" id="navMenuBtn" onclick="switchTab('menu')">
+            <i class="fa-solid fa-house"></i>
+            <span>Menu ISTAL</span>
+        </div>
+        <div class="nav-item" id="navChatBtn" onclick="switchTab('chat')">
+            <i class="fa-solid fa-comments"></i>
+            <span>Roomchat</span>
+        </div>
     </div>
 </div>
 
 <script>
-    // 1. Konfigurasi Firebase Realtime Database
+    // 1. Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyChUPdkwJx8yGsOCofb8iTtVWaxysRB7mc",
         authDomain: "istalapp-8325d.firebaseapp.com",
@@ -271,14 +448,13 @@
         appId: "1:167010805275:web:b0bc9ab21edcf5dbee7abe"
     };
 
-    // Inisialisasi Firebase
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     const chatRef = database.ref('chats');
 
     const ADMIN_USERNAME = 'suturist4l';
 
-    // 2. Kelola Username Per-HP
+    // 2. User Management
     let currentUser = localStorage.getItem('CURRENT_USER');
     if (!currentUser) {
         currentUser = prompt("Masukkan Username Anda:") || "User_" + Math.floor(Math.random() * 1000);
@@ -292,12 +468,35 @@
             currentUser = newName.trim();
             localStorage.setItem('CURRENT_USER', currentUser);
             document.getElementById('displayUsername').innerText = currentUser;
-            // Refresh tampilan agar hak akses tombol hapus menyesuaikan username baru
             location.reload();
         }
     }
 
-    // Helper mencegah XSS Inject
+    // 3. Tab Navigation Logic
+    function switchTab(tabName) {
+        const tabMenu = document.getElementById('tabMenu');
+        const tabChat = document.getElementById('tabChat');
+        const navMenuBtn = document.getElementById('navMenuBtn');
+        const navChatBtn = document.getElementById('navChatBtn');
+
+        if (tabName === 'menu') {
+            tabMenu.classList.add('active');
+            tabChat.classList.remove('active');
+            navMenuBtn.classList.add('active');
+            navChatBtn.classList.remove('active');
+        } else {
+            tabChat.classList.add('active');
+            tabMenu.classList.remove('active');
+            navChatBtn.classList.add('active');
+            navMenuBtn.classList.remove('active');
+            
+            // Scroll otomatis ke bawah pesan saat tab diklik
+            const chatBox = document.getElementById('chatBox');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    }
+
+    // Security Helper
     function escapeHtml(text) {
         return text
             .replace(/&/g, "&amp;")
@@ -307,7 +506,7 @@
             .replace(/'/g, "&#039;");
     }
 
-    // 3. Fungsi Kirim Pesan
+    // 4. Send Message
     function sendChatMessage() {
         const inputEl = document.getElementById('chatInput');
         const text = inputEl.value.trim();
@@ -317,7 +516,6 @@
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
 
-        // Push data ke Firebase
         chatRef.push({
             username: currentUser,
             text: text,
@@ -331,25 +529,22 @@
         });
     }
 
-    // 4. Fungsi Hapus Pesan (Khusus Admin)
+    // 5. Delete Message (Khusus Admin)
     function deleteChatMessage(key) {
         if (!key) return;
         if (confirm("Yakin ingin menghapus pesan ini?")) {
-            chatRef.child(key).remove()
-                .catch((err) => {
-                    alert("Gagal menghapus pesan: " + err.message);
-                });
+            chatRef.child(key).remove().catch((err) => {
+                alert("Gagal menghapus: " + err.message);
+            });
         }
     }
 
-    // Event Listener Enter Key
+    // Enter Key Event Listener
     document.getElementById('chatInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            sendChatMessage();
-        }
+        if (e.key === 'Enter') sendChatMessage();
     });
 
-    // 5. Listener Real-time Firebase
+    // 6. Realtime Listener
     chatRef.on('value', (snapshot) => {
         const chatBox = document.getElementById('chatBox');
         const data = snapshot.val();
@@ -357,15 +552,14 @@
         if (!data) {
             chatBox.innerHTML = `
                 <div style="text-align: center; color: var(--text-muted); padding: 40px 10px; font-size: 0.85rem;">
-                    <i class="fa-solid fa-comments" style="font-size: 2rem; margin-bottom: 8px; color: rgba(255,255,255,0.2);"></i><br>
-                    Belum ada pesan silaturahmi.
+                    <i class="fa-solid fa-comments" style="font-size: 2rem; margin-bottom: 8px; opacity: 0.3;"></i><br>
+                    Belum ada pesan.
                 </div>
             `;
             return;
         }
 
         let htmlContent = '';
-        // Cek apakah pengguna saat ini adalah Admin
         const isCurrentAdmin = (currentUser.toLowerCase() === ADMIN_USERNAME.toLowerCase());
 
         Object.keys(data).forEach(key => {
@@ -376,21 +570,17 @@
             const dateInfo = chat.date || '';
             const safeText = escapeHtml(chat.text || '');
 
-            // Cek apakah pengirim pesan adalah Admin
             const isMsgFromAdmin = (username.toLowerCase() === ADMIN_USERNAME.toLowerCase());
-            
-            // Badge Centang Biru untuk Admin
             const verifiedBadge = isMsgFromAdmin 
-                ? `<i class="fa-solid fa-circle-check" style="color: #1DA1F2; margin-left: 4px; font-size: 0.82rem;" title="Terverifikasi Admin"></i>` 
+                ? `<i class="fa-solid fa-circle-check" style="color: #1DA1F2; margin-left: 4px;" title="Terverifikasi Admin"></i>` 
                 : '';
 
-            // Styling Khusus Pesan Admin
             const avatarStyle = isMsgFromAdmin ? 'style="background: var(--accent-gold); color: #0d2014;"' : '';
             const bubbleStyle = isMsgFromAdmin ? 'style="background: var(--chat-bubble-admin); border: 1px solid rgba(255,215,0,0.2);"' : '';
 
-            // Tombol hapus HANYA dirender kalau pengguna yang melihat web adalah Admin
+            // Tombol hapus HANYA tampil untuk admin suturist4l
             const deleteBtn = isCurrentAdmin 
-                ? `<button class="btn-delete" onclick="deleteChatMessage('${key}')" title="Hapus pesan"><i class="fa-solid fa-trash"></i> Hapus</button>` 
+                ? `<button class="btn-delete" onclick="deleteChatMessage('${key}')"><i class="fa-solid fa-trash"></i> Hapus</button>` 
                 : '';
 
             htmlContent += `
@@ -411,7 +601,6 @@
         });
 
         chatBox.innerHTML = htmlContent;
-        // Auto scroll ke pesan paling baru
         chatBox.scrollTop = chatBox.scrollHeight;
     });
 </script>
