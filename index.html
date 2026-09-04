@@ -21,7 +21,7 @@
             --pure-white: #ffffff;
             --off-white: #f4f7f5;
             --text-dark: #1c2826;
-            --verified-blue: #1da1f2; /* Warna centang biru verified */
+            --verified-blue: #1da1f2;
         }
 
         * {
@@ -337,7 +337,6 @@
             gap: 4px;
         }
 
-        /* Centang Biru Verified Icon */
         .verified-badge {
             color: var(--verified-blue);
             font-size: 0.75rem;
@@ -652,7 +651,7 @@
         <div class="slider-container">
             <div class="slider-wrapper" id="sliderWrapper">
                 <div class="slide">
-                    <img src="https://i.ibb.co.com/9kCHDwNp/61849657-854e-4edd-8f39-5b25965c06d1.png?auto=format&fit=crop&w=800&q=80" alt="Kegiatan 1">
+                    <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=800&q=80" alt="Kegiatan 1">
                     <div class="slide-caption">Kajian & Silaturahmi Rutin ISTAL</div>
                 </div>
                 <div class="slide">
@@ -776,8 +775,8 @@
                 </div>
                 <div style="display: flex; gap: 6px; flex-direction: column;">
                     <input type="file" id="galleryFileInput" accept="image/*" style="font-size: 0.75rem; background: #fff; padding: 6px; border-radius: 6px; border: 1px solid #ccc; width: 100%;">
-                    <button class="btn-send" onclick="uploadGalleryPhoto()" style="padding: 7px 12px; font-size: 0.75rem; justify-content: center; margin-top: 4px;">
-                        <i class="fa-solid fa-upload"></i> Upload Ke Galeri
+                    <button class="btn-send" id="btnUploadGallery" onclick="uploadGalleryPhoto()" style="padding: 7px 12px; font-size: 0.75rem; justify-content: center; margin-top: 4px;">
+                        <i class="fa-solid fa-upload"></i> Upload Ke Database Galeri
                     </button>
                 </div>
             </div>
@@ -785,7 +784,7 @@
             <!-- GRID DISPLAY FOTO GALERI -->
             <div class="modal-body">
                 <div id="galleryGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
-                    <!-- Foto di-render dinamis dari JS -->
+                    <!-- Foto di-render dinamis dari Firebase Realtime Database -->
                 </div>
             </div>
         </div>
@@ -829,8 +828,8 @@
                     Silaturahmi dan kajian fikih/akhlak antar rumah jamaah.
                 </div>
                 <div style="background: #eef4f1; padding: 8px; border-radius: 5px;">
-                    <strong>3. Santunan anak yatim</strong><br>
-                    Penyaluran santunan anak yatim, dana hasil infaq QRIS.
+                    <strong>3. Berbagi Jum'at Berkah</strong><br>
+                    Penyaluran paket makanan dari dana hasil infaq QRIS.
                 </div>
             </div>
         </div>
@@ -846,7 +845,7 @@
             <div class="footer-col">
                 <h4>Informasi & Lokasi</h4>
                 <p><strong>Pengembang:</strong> Tim ISTAL Tech</p>
-                <p><strong>Lokasi:</strong> wanajaya, tambakdahan, SUBANG , Jawa Barat</p>
+                <p><strong>Lokasi:</strong> Bandung, Jawa Barat</p>
             </div>
             <div class="footer-col">
                 <h4>Sosial Media</h4>
@@ -859,7 +858,7 @@
             </div>
         </div>
         <div class="watermark">
-            &copy; 2026 ISTAL (Istiqomah Al Barokah)
+            &copy; 2026 ISTAL (Istiqomah Al Barokah). Built for GitHub Pages.
         </div>
     </footer>
 
@@ -869,16 +868,16 @@
         // 1. KONFIGURASI FIREBASE DATABASE REALTIME
         // Ganti nilai dibawah dengan kunci Firebase Anda
         // ==========================================
-        
-const firebaseConfig = {
-  apiKey: "AIzaSyChUPdkwJx8yGsOCofb8iTtVWaxysRB7mc",
-  authDomain: "istalapp-8325d.firebaseapp.com",
-  databaseURL: "https://istalapp-8325d-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "istalapp-8325d",
-  storageBucket: "istalapp-8325d.firebasestorage.app",
-  messagingSenderId: "167010805275",
-  appId: "1:167010805275:web:b0bc9ab21edcf5dbee7abe"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyYOUR_API_KEY_HERE",
+            authDomain: "your-app.firebaseapp.com",
+            databaseURL: "https://your-app-default-rtdb.firebaseio.com",
+            projectId: "your-app",
+            storageBucket: "your-app.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -896,25 +895,13 @@ const firebaseConfig = {
 
         // AKUN & ADMIN
         let currentAuthMode = 'login';
-        const ADMIN_USERNAME = 'istaloficiall';
+        const ADMIN_USERNAME = 'suturist4l';
         const ADMIN_PASSWORD = 'suturist4l';
-
-        // DEFAULT FOTO GALERI
-        const defaultGallery = [
-            { id: 101, url: 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=400&q=80' },
-            { id: 102, url: 'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=400&q=80' },
-            { id: 103, url: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=400&q=80' },
-            { id: 104, url: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=400&q=80' }
-        ];
 
         function initApp() {
             try {
-                if (localStorage.getItem('ISTAL_GALLERY') === null) {
-                    localStorage.setItem('ISTAL_GALLERY', JSON.stringify(defaultGallery));
-                }
-
                 listenToRealtimeChats();
-                renderGallery();
+                listenToRealtimeGallery(); // Mendengarkan galeri realtime
 
                 const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
                 if (activeUser) {
@@ -929,7 +916,7 @@ const firebaseConfig = {
         }
 
         // ==========================================
-        // 2. SISTEM CHAT DATABASE REALTIME + VERIFIED BADGE
+        // 2. SISTEM CHAT DATABASE REALTIME
         // ==========================================
         function listenToRealtimeChats() {
             const chatRef = db.ref('istal_chats');
@@ -1024,6 +1011,110 @@ const firebaseConfig = {
             }
         }
 
+        // ==========================================
+        // 3. SISTEM GALERI REALTIME (TERHUBUNG FIREBASE)
+        // ==========================================
+        function listenToRealtimeGallery() {
+            const galleryRef = db.ref('istal_gallery');
+            
+            galleryRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                const galleryGrid = document.getElementById('galleryGrid');
+                if (!galleryGrid) return;
+
+                const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+                const isAdmin = (activeUser && activeUser.toLowerCase() === ADMIN_USERNAME.toLowerCase());
+
+                if (!data) {
+                    galleryGrid.innerHTML = `
+                        <div style="grid-column: span 2; text-align: center; color: #888; padding: 30px 10px; font-size: 0.8rem;">
+                            <i class="fa-solid fa-images" style="font-size: 2rem; margin-bottom: 8px; color: #ccc;"></i><br>
+                            Belum ada foto kegiatan di database galeri.
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                const keys = Object.keys(data).reverse(); // Tampilkan foto terbaru di paling atas
+                keys.forEach((key) => {
+                    const item = data[key];
+                    html += `
+                        <div style="position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 1/1; box-shadow: 0 2px 6px rgba(0,0,0,0.12); background: #eee;">
+                            <img src="${item.url}" alt="Foto Galeri ISTAL" style="width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer;" onclick="openFullImage('${item.url}')">
+                            ${isAdmin ? `
+                                <button onclick="deleteGalleryPhoto('${key}')" title="Hapus foto dari database" style="position: absolute; top: 6px; right: 6px; background: rgba(231, 76, 60, 0.92); color: white; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 2;">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+
+                galleryGrid.innerHTML = html;
+            });
+        }
+
+        function uploadGalleryPhoto() {
+            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+            if (!activeUser || activeUser.toLowerCase() !== ADMIN_USERNAME.toLowerCase()) {
+                alert('Akses Ditolak! Hanya Admin yang dapat meng-upload foto.');
+                return;
+            }
+
+            const fileInput = document.getElementById('galleryFileInput');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Harap pilih berkas foto terlebih dahulu!');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            // Batas maksimal 1.5MB agar database realtime berjalan ringan dan cepat
+            if (file.size > 1.5 * 1024 * 1024) {
+                alert('Ukuran foto terlalu besar! Maksimal 1.5 MB.');
+                return;
+            }
+
+            const btnUpload = document.getElementById('btnUploadGallery');
+            btnUpload.disabled = true;
+            btnUpload.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah...';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Image = e.target.result;
+                
+                // Simpan foto ke Firebase Database node 'istal_gallery'
+                db.ref('istal_gallery').push({
+                    url: base64Image,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                }).then(() => {
+                    fileInput.value = '';
+                    btnUpload.disabled = false;
+                    btnUpload.innerHTML = '<i class="fa-solid fa-upload"></i> Upload Ke Database Galeri';
+                    alert('Berhasil! Foto baru berhasil di-upload dan sekarang tampil di HP SEMUA PENGGUNA!');
+                }).catch((err) => {
+                    btnUpload.disabled = false;
+                    btnUpload.innerHTML = '<i class="fa-solid fa-upload"></i> Upload Ke Database Galeri';
+                    alert('Gagal meng-upload foto ke database: ' + err.message);
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function deleteGalleryPhoto(key) {
+            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+            if (!activeUser || activeUser.toLowerCase() !== ADMIN_USERNAME.toLowerCase()) {
+                alert('Akses Ditolak!');
+                return;
+            }
+
+            if (confirm('Apakah Anda yakin ingin menghapus foto ini dari database? Foto akan terhapus di HP semua orang.')) {
+                db.ref('istal_gallery/' + key).remove()
+                    .then(() => alert('Foto berhasil dihapus dari galeri!'))
+                    .catch((err) => alert('Gagal menghapus foto: ' + err.message));
+            }
+        }
+
         function escapeHTML(str) {
             return String(str)
                 .replace(/&/g, '&amp;')
@@ -1036,9 +1127,6 @@ const firebaseConfig = {
         // MODAL CONTROLLER
         function openModal(id) { 
             document.getElementById(id).style.display = 'flex'; 
-            if (id === 'modalGallery') {
-                renderGallery();
-            }
         }
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
@@ -1144,7 +1232,10 @@ const firebaseConfig = {
                 btnReset.style.display = isAdmin ? 'inline-block' : 'none';
             }
 
-            renderGallery();
+            const adminControls = document.getElementById('adminGalleryControls');
+            if (adminControls) {
+                adminControls.style.display = isAdmin ? 'block' : 'none';
+            }
         }
 
         function showLoggedOutUI() {
@@ -1155,115 +1246,13 @@ const firebaseConfig = {
             const btnReset = document.getElementById('btnAdminReset');
             if (btnReset) btnReset.style.display = 'none';
 
-            renderGallery();
+            const adminControls = document.getElementById('adminGalleryControls');
+            if (adminControls) adminControls.style.display = 'none';
         }
 
         function logoutUser() {
             localStorage.removeItem('ISTAL_ACTIVE_USER');
             location.reload();
-        }
-
-        // UPLOAD & GALERI
-        function uploadGalleryPhoto() {
-            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
-            if (!activeUser || activeUser.toLowerCase() !== ADMIN_USERNAME.toLowerCase()) {
-                alert('Akses Ditolak! Hanya Admin yang dapat meng-upload foto.');
-                return;
-            }
-
-            const fileInput = document.getElementById('galleryFileInput');
-            if (!fileInput.files || fileInput.files.length === 0) {
-                alert('Harap pilih berkas foto terlebih dahulu!');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            if (file.size > 2.5 * 1024 * 1024) {
-                alert('Ukuran foto terlalu besar! Maksimal 2.5 MB.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                let photos = JSON.parse(localStorage.getItem('ISTAL_GALLERY')) || [];
-                if (!Array.isArray(photos)) photos = defaultGallery;
-
-                photos.unshift({
-                    id: Date.now(),
-                    url: e.target.result
-                });
-
-                try {
-                    localStorage.setItem('ISTAL_GALLERY', JSON.stringify(photos));
-                    fileInput.value = '';
-                    renderGallery();
-                    alert('Berhasil! Foto baru ditambahkan.');
-                } catch(err) {
-                    alert('Penyimpanan penuh!');
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function deleteGalleryPhoto(photoId) {
-            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
-            if (!activeUser || activeUser.toLowerCase() !== ADMIN_USERNAME.toLowerCase()) {
-                alert('Akses Ditolak!');
-                return;
-            }
-
-            if (confirm('Apakah Anda yakin ingin menghapus foto ini?')) {
-                let photos = JSON.parse(localStorage.getItem('ISTAL_GALLERY')) || [];
-                photos = photos.filter(p => p.id !== photoId);
-                localStorage.setItem('ISTAL_GALLERY', JSON.stringify(photos));
-                renderGallery();
-            }
-        }
-
-        function renderGallery() {
-            const galleryGrid = document.getElementById('galleryGrid');
-            const adminControls = document.getElementById('adminGalleryControls');
-            if (!galleryGrid) return;
-
-            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
-            const isAdmin = (activeUser && activeUser.toLowerCase() === ADMIN_USERNAME.toLowerCase());
-
-            if (adminControls) {
-                adminControls.style.display = isAdmin ? 'block' : 'none';
-            }
-
-            let rawPhotos = localStorage.getItem('ISTAL_GALLERY');
-            let photos = [];
-            try {
-                photos = rawPhotos ? JSON.parse(rawPhotos) : defaultGallery;
-            } catch(e) {
-                photos = defaultGallery;
-            }
-
-            if (!Array.isArray(photos) || photos.length === 0) {
-                galleryGrid.innerHTML = `
-                    <div style="grid-column: span 2; text-align: center; color: #888; padding: 20px; font-size: 0.8rem;">
-                        Belum ada foto di galeri.
-                    </div>
-                `;
-                return;
-            }
-
-            let html = '';
-            photos.forEach(item => {
-                html += `
-                    <div style="position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 1/1; box-shadow: 0 2px 6px rgba(0,0,0,0.12); background: #eee;">
-                        <img src="${item.url}" alt="Foto Galeri ISTAL" style="width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer;" onclick="openFullImage('${item.url}')">
-                        ${isAdmin ? `
-                            <button onclick="deleteGalleryPhoto(${item.id})" title="Hapus foto" style="position: absolute; top: 6px; right: 6px; background: rgba(231, 76, 60, 0.92); color: white; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 2;">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        ` : ''}
-                    </div>
-                `;
-            });
-
-            galleryGrid.innerHTML = html;
         }
 
         // DOM READY LOADER
