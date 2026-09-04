@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Firebase Realtime Database SDK (Compat Mode untuk HTML Langsung) -->
+    <!-- Firebase Realtime Database SDK (Compat Mode) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
@@ -21,6 +21,7 @@
             --pure-white: #ffffff;
             --off-white: #f4f7f5;
             --text-dark: #1c2826;
+            --verified-blue: #1da1f2; /* Warna centang biru verified */
         }
 
         * {
@@ -331,6 +332,15 @@
             color: var(--bg-dark-green);
             font-size: 0.72rem;
             margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Centang Biru Verified Icon */
+        .verified-badge {
+            color: var(--verified-blue);
+            font-size: 0.75rem;
         }
 
         .chat-meta {
@@ -400,6 +410,12 @@
             align-items: center;
             margin-top: 10px;
             gap: 8px;
+        }
+
+        #userDisplayName {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .btn-logout {
@@ -747,7 +763,7 @@
         </div>
     </div>
 
-    <!-- MODAL GALERI FOTO KEGIATAN (WITH ADMIN UPLOAD SYSTEM) -->
+    <!-- MODAL GALERI FOTO KEGIATAN -->
     <div class="modal" id="modalGallery">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalGallery')">&times;</span>
@@ -851,18 +867,18 @@
     <script>
         // ==========================================
         // 1. KONFIGURASI FIREBASE DATABASE REALTIME
-        // Ganti nilai dibawah dengan kunci Firebase Anda sendiri
+        // Ganti nilai dibawah dengan kunci Firebase Anda
         // ==========================================
         const firebaseConfig = {
-  apiKey: "AIzaSyChUPdkwJx8yGsOCofb8iTtVWaxysRB7mc",
-  authDomain: "istalapp-8325d.firebaseapp.com",
-  databaseURL: "https://istalapp-8325d-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "istalapp-8325d",
-  storageBucket: "istalapp-8325d.firebasestorage.app",
-  messagingSenderId: "167010805275",
-  appId: "1:167010805275:web:b0bc9ab21edcf5dbee7abe"
-};
-        // Inisialisasi Firebase
+            apiKey: "AIzaSyYOUR_API_KEY_HERE",
+            authDomain: "your-app.firebaseapp.com",
+            databaseURL: "https://your-app-default-rtdb.firebaseio.com",
+            projectId: "your-app",
+            storageBucket: "your-app.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -897,7 +913,6 @@
                     localStorage.setItem('ISTAL_GALLERY', JSON.stringify(defaultGallery));
                 }
 
-                // Mulai listener pesan real-time dari Database Cloud
                 listenToRealtimeChats();
                 renderGallery();
 
@@ -914,12 +929,11 @@
         }
 
         // ==========================================
-        // 2. SISTEM CHAT DATABASE REALTIME
+        // 2. SISTEM CHAT DATABASE REALTIME + VERIFIED BADGE
         // ==========================================
         function listenToRealtimeChats() {
             const chatRef = db.ref('istal_chats');
             
-            // Mendengarkan perubahan data pesan secara langsung
             chatRef.limitToLast(100).on('value', (snapshot) => {
                 const data = snapshot.val();
                 const chatBox = document.getElementById('chatBox');
@@ -943,12 +957,16 @@
                     const timeInfo = chat.time || '';
                     const dateInfo = chat.date || '';
 
+                    // Cek Apakah Pengirim adalah Admin (suturist4l)
+                    const isAdminUser = (username.toLowerCase() === ADMIN_USERNAME.toLowerCase());
+                    const verifiedBadge = isAdminUser ? ` <i class="fa-solid fa-circle-check verified-badge" title="Akun Admin Terverifikasi"></i>` : '';
+
                     htmlContent += `
                         <div class="chat-item">
                             <div class="chat-avatar">${initial}</div>
                             <div class="chat-content-wrapper">
                                 <div class="chat-text-bg">
-                                    <div class="chat-username">${escapeHTML(username)}</div>
+                                    <div class="chat-username">${escapeHTML(username)}${verifiedBadge}</div>
                                     <div>${escapeHTML(chat.text)}</div>
                                 </div>
                                 <div class="chat-meta">
@@ -977,7 +995,6 @@
             const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
             const dateStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
 
-            // Simpan langsung ke Firebase Database
             db.ref('istal_chats').push({
                 username: activeUser,
                 text: text,
@@ -987,7 +1004,7 @@
             }).then(() => {
                 msgInput.value = '';
             }).catch((err) => {
-                alert("Gagal mengirim pesan! Pastikan konfigurasi Firebase Database sudah sesuai.");
+                alert("Gagal mengirim pesan! Pastikan konfigurasi Firebase Database sudah benar.");
                 console.error(err);
             });
         }
@@ -1007,7 +1024,6 @@
             }
         }
 
-        // Sanitasi teks agar aman dari tag HTML
         function escapeHTML(str) {
             return String(str)
                 .replace(/&/g, '&amp;')
@@ -1066,7 +1082,6 @@
                     return;
                 }
 
-                // Cek Login Khusus Admin
                 if (currentAuthMode === 'login' && usernameInput.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
                     if (passwordInput === ADMIN_PASSWORD) {
                         localStorage.setItem('ISTAL_ACTIVE_USER', ADMIN_USERNAME);
@@ -1117,12 +1132,15 @@
         function showLoggedInUI(username) {
             document.getElementById('authBox').style.display = 'none';
             document.getElementById('welcomeBanner').style.display = 'flex';
-            document.getElementById('userDisplayName').innerText = username;
+            
+            const isAdmin = (username.toLowerCase() === ADMIN_USERNAME.toLowerCase());
+            const verifiedBadge = isAdmin ? ` <i class="fa-solid fa-circle-check verified-badge" title="Akun Admin Terverifikasi"></i>` : '';
+            
+            document.getElementById('userDisplayName').innerHTML = escapeHTML(username) + verifiedBadge;
             document.getElementById('chatSendForm').style.display = 'flex';
 
             const btnReset = document.getElementById('btnAdminReset');
             if (btnReset) {
-                const isAdmin = (username.toLowerCase() === ADMIN_USERNAME.toLowerCase());
                 btnReset.style.display = isAdmin ? 'inline-block' : 'none';
             }
 
