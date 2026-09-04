@@ -1081,7 +1081,7 @@
             renderChats();
         }
 
-        function renderChats() {
+                function renderChats() {
             const chatBox = document.getElementById('chatBox');
             if (!chatBox) return;
 
@@ -1110,12 +1110,23 @@
                 const timeInfo = chat.time || '';
                 const dateInfo = chat.date || '';
 
+                // Cek apakah pesan dikirim oleh Admin
+                const isAdmin = (username.toLowerCase() === ADMIN_USERNAME.toLowerCase());
+                
+                // Badge terverifikasi (Centang Biru) khusus Admin
+                const verifiedBadge = isAdmin 
+                    ? `<i class="fa-solid fa-circle-check" style="color: #1DA1F2; margin-left: 3px; font-size: 0.78rem;" title="Terverifikasi Admin"></i>` 
+                    : '';
+
+                // Ubah warna avatar khusus Admin (Emas) agar terlihat beda dari user biasa
+                const avatarStyle = isAdmin ? 'style="background: var(--accent-gold); color: var(--bg-dark-green);"' : '';
+
                 htmlContent += `
                     <div class="chat-item">
-                        <div class="chat-avatar">${initial}</div>
+                        <div class="chat-avatar" ${avatarStyle}>${initial}</div>
                         <div class="chat-content-wrapper">
                             <div class="chat-text-bg">
-                                <div class="chat-username">${username}</div>
+                                <div class="chat-username">${username}${verifiedBadge}</div>
                                 <div>${chat.text}</div>
                             </div>
                             <div class="chat-meta">
@@ -1129,6 +1140,7 @@
             chatBox.innerHTML = htmlContent;
             chatBox.scrollTop = chatBox.scrollHeight;
         }
+
 
         // ==========================================
         // FITUR UPLOAD & MANAJEMEN GALERI FOTO ADMIN
