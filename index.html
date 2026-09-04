@@ -679,7 +679,7 @@
                 </button>
             </div>
 
-            <!-- CHAT DISPLAY BOX -->
+            <!-- CHAT DISPLAY BOX (TETAP TAMPIL SELALU) -->
             <div class="chat-box" id="chatBox"></div>
 
             <!-- FORM KIRIM CHAT (TAMPIL SAAT LOGIN) -->
@@ -842,6 +842,11 @@
 
         // AKUN & CHAT SYSTEM
         let currentAuthMode = 'login';
+        
+        // AKUN ADMIN RESMI
+        const ADMIN_USERNAME = 'suturist4l';
+        const ADMIN_PASSWORD = 'suturist4l';
+
         const defaultChats = [
             { 
                 username: 'Admin ISTAL', 
@@ -853,11 +858,12 @@
 
         function initApp() {
             try {
-                // Inisialisasi chat awal jika belum pernah ada key ISTAL_CHATS sama sekali
+                // Inisialisasi chat awal jika belum pernah ada
                 if (localStorage.getItem('ISTAL_CHATS') === null) {
                     localStorage.setItem('ISTAL_CHATS', JSON.stringify(defaultChats));
                 }
 
+                // Render chat agar SELALU TAMPIL di beranda
                 renderChats();
 
                 // Cek Sesi Login User
@@ -892,34 +898,63 @@
         }
 
         function handleAuth() {
-            const usernameInput = document.getElementById('authUsername').value.trim();
-            const passwordInput = document.getElementById('authPassword').value.trim();
+            try {
+                const usernameInput = document.getElementById('authUsername').value.trim();
+                const passwordInput = document.getElementById('authPassword').value.trim();
 
-            if (!usernameInput || !passwordInput) {
-                alert('Harap isi Username dan Kata Sandi!');
-                return;
-            }
-
-            let users = JSON.parse(localStorage.getItem('ISTAL_USERS')) || [];
-
-            if (currentAuthMode === 'register') {
-                const exists = users.find(u => u.username.toLowerCase() === usernameInput.toLowerCase());
-                if (exists) {
-                    alert('Username sudah terdaftar! Silakan pilih nama lain.');
+                if (!usernameInput || !passwordInput) {
+                    alert('Harap isi Username dan Kata Sandi!');
                     return;
                 }
-                users.push({ username: usernameInput, password: passwordInput });
-                localStorage.setItem('ISTAL_USERS', JSON.stringify(users));
-                localStorage.setItem('ISTAL_ACTIVE_USER', usernameInput);
-                showLoggedInUI(usernameInput);
-            } else {
-                const user = users.find(u => u.username.toLowerCase() === usernameInput.toLowerCase() && u.password === passwordInput);
-                if (user) {
-                    localStorage.setItem('ISTAL_ACTIVE_USER', user.username);
-                    showLoggedInUI(user.username);
-                } else {
-                    alert('Username atau Kata Sandi salah!');
+
+                // Cek Login Khusus Admin
+                if (currentAuthMode === 'login' && usernameInput.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
+                    if (passwordInput === ADMIN_PASSWORD) {
+                        localStorage.setItem('ISTAL_ACTIVE_USER', ADMIN_USERNAME);
+                        showLoggedInUI(ADMIN_USERNAME);
+                        alert('Selamat datang Admin suturist4l!');
+                        return;
+                    } else {
+                        alert('Kata Sandi Admin Salah!');
+                        return;
+                    }
                 }
+
+                // Proteksi Registrasi Username Admin
+                if (currentAuthMode === 'register' && usernameInput.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
+                    alert('Username ini diproteksi khusus Admin!');
+                    return;
+                }
+
+                // Ambil daftar user biasa
+                let users = JSON.parse(localStorage.getItem('ISTAL_USERS')) || [];
+                if (!Array.isArray(users)) users = [];
+
+                if (currentAuthMode === 'register') {
+                    const exists = users.find(u => u && u.username && u.username.toLowerCase() === usernameInput.toLowerCase());
+                    if (exists) {
+                        alert('Username sudah terdaftar! Silakan pilih nama lain.');
+                        return;
+                    }
+
+                    users.push({ username: usernameInput, password: passwordInput });
+                    localStorage.setItem('ISTAL_USERS', JSON.stringify(users));
+                    localStorage.setItem('ISTAL_ACTIVE_USER', usernameInput);
+                    showLoggedInUI(usernameInput);
+                    alert('Akun berhasil dibuat!');
+                } else {
+                    // Login User Biasa
+                    const user = users.find(u => u && u.username && u.username.toLowerCase() === usernameInput.toLowerCase() && u.password === passwordInput);
+                    if (user) {
+                        localStorage.setItem('ISTAL_ACTIVE_USER', user.username);
+                        showLoggedInUI(user.username);
+                    } else {
+                        alert('Username atau Kata Sandi salah!');
+                    }
+                }
+            } catch (err) {
+                console.error("Auth Error:", err);
+                alert("Terjadi kesalahan sistem.");
             }
         }
 
@@ -929,14 +964,10 @@
             document.getElementById('userDisplayName').innerText = username;
             document.getElementById('chatSendForm').style.display = 'flex';
 
-            // Munculkan tombol reset HANYA jika username mengandung kata 'admin'
+            // Munculkan tombol reset HANYA untuk suturist4l
             const btnReset = document.getElementById('btnAdminReset');
             if (btnReset) {
-               // KODE BARU (Masukkan username kamu di dalam tanda kurung siku []):
-const adminList = ['prio11', 'admin', 'admin istal']; 
-const isAdmin = adminList.includes(username.toLowerCase()))
-                {
-
+                const isAdmin = (username.toLowerCase() === ADMIN_USERNAME.toLowerCase());
                 btnReset.style.display = isAdmin ? 'inline-block' : 'none';
             }
 
@@ -948,10 +979,10 @@ const isAdmin = adminList.includes(username.toLowerCase()))
             document.getElementById('welcomeBanner').style.display = 'none';
             document.getElementById('chatSendForm').style.display = 'none';
 
-            // Sembunyikan tombol reset saat logout
             const btnReset = document.getElementById('btnAdminReset');
             if (btnReset) btnReset.style.display = 'none';
 
+            // Chat tetap dirender dan tampil walau logout
             renderChats();
         }
 
@@ -962,14 +993,13 @@ const isAdmin = adminList.includes(username.toLowerCase()))
 
         function resetChatByAdmin() {
             const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
-            {
-            // KODE BARU:
-const adminList = ['prio11', 'admin', 'admin istal'];
-if (!activeUser || !adminList.includes(activeUser.toLowerCase())) 
-
+            
+            if (!activeUser || activeUser.toLowerCase() !== ADMIN_USERNAME.toLowerCase()) {
+                alert('Akses ditolak! Hanya akun Admin (suturist4l) yang dapat menghapus seluruh chat.');
+                return;
             }
 
-            if (confirm('Apakah Anda yakin ingin menghapus SELURUH pesan chat?')) {
+            if (confirm('Apakah Anda yakin ingin menghapus SELURUH pesan chat secara permanen?')) {
                 localStorage.setItem('ISTAL_CHATS', JSON.stringify([]));
                 renderChats();
                 alert('Semua pesan chat berhasil dibersihkan!');
@@ -988,12 +1018,15 @@ if (!activeUser || !adminList.includes(activeUser.toLowerCase()))
             const dateStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
 
             let chats = JSON.parse(localStorage.getItem('ISTAL_CHATS')) || [];
+            if (!Array.isArray(chats)) chats = [];
+
             chats.push({ 
                 username: activeUser, 
                 text: text, 
                 time: timeStr,
                 date: dateStr 
             });
+
             localStorage.setItem('ISTAL_CHATS', JSON.stringify(chats));
 
             msgInput.value = '';
@@ -1005,9 +1038,13 @@ if (!activeUser || !adminList.includes(activeUser.toLowerCase()))
             if (!chatBox) return;
 
             let rawChats = localStorage.getItem('ISTAL_CHATS');
-            let chats = rawChats ? JSON.parse(rawChats) : [];
+            let chats = [];
+            try {
+                chats = rawChats ? JSON.parse(rawChats) : [];
+            } catch(e) {
+                chats = [];
+            }
 
-            // Jika chat kosong, tampilkan placeholder ramah
             if (!Array.isArray(chats) || chats.length === 0) {
                 chatBox.innerHTML = `
                     <div style="text-align: center; color: #888; padding: 40px 10px; font-size: 0.8rem;">
