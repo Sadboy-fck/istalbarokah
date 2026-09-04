@@ -961,10 +961,11 @@ const isAdmin = adminList.includes(username.toLowerCase());
 
         function resetChatByAdmin() {
             const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
-            
-            if (!activeUser || !activeUser.toLowerCase().includes('admin')) {
-                alert('Akses ditolak! Hanya akun Admin yang dapat menghapus seluruh chat.');
-                return;
+            {
+            // KODE BARU:
+const adminList = ['prio11', 'admin', 'admin istal'];
+if (!activeUser || !adminList.includes(activeUser.toLowerCase())) 
+
             }
 
             if (confirm('Apakah Anda yakin ingin menghapus SELURUH pesan chat?')) {
