@@ -67,7 +67,7 @@
             margin-bottom: 10px;
         }
 
-        /* WAKTU SHOLAT PRESISI FIT 100% LAYAR */
+        /* WAKTU SHOLAT */
         .prayer-container {
             width: 100%;
             max-width: 600px;
@@ -132,7 +132,7 @@
             100% { transform: translateX(-100%); }
         }
 
-        /* SLIDER RINGKAS */
+        /* SLIDER SECTION */
         .slider-section {
             padding: 10px 10px 0;
             max-width: 750px;
@@ -184,7 +184,7 @@
             padding: 0 10px;
         }
 
-        /* 4 GRID MENU KOTAK KECIL */
+        /* 4 GRID MENU KOTAK */
         .grid-menu {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -238,33 +238,14 @@
         }
 
         .chat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #edf2f0;
-    padding-bottom: 8px;
-    gap: 8px;
-}
-
-.btn-reset-chat {
-    background: #e74c3c;
-    color: #ffffff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: none; /* Otomatis muncul HANYA jika Admin login */
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.btn-reset-chat:hover {
-    background: #c0392b;
-}
-
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #edf2f0;
+            padding-bottom: 8px;
+            gap: 8px;
+        }
 
         .chat-title {
             color: var(--bg-dark-green);
@@ -275,7 +256,25 @@
             gap: 8px;
         }
 
-        /* CHAT DISPLAY BOX (TETAP Wajib TAMPIL) */
+        .btn-reset-chat {
+            background: #e74c3c;
+            color: #ffffff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .btn-reset-chat:hover {
+            background: #c0392b;
+        }
+
+        /* CHAT DISPLAY BOX */
         .chat-box {
             height: 240px;
             min-height: 200px;
@@ -340,7 +339,7 @@
             gap: 4px;
         }
 
-        /* INPUT CHAT RESPONSIVE FLEXBOX */
+        /* INPUT CHAT FORM */
         .chat-send-form {
             display: flex;
             gap: 6px;
@@ -403,15 +402,19 @@
             background: #e74c3c;
             color: #fff;
             border: none;
-            padding: 4px 10px;
-            border-radius: 5px;
-            font-size: 0.68rem;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.72rem;
             font-weight: 600;
             cursor: pointer;
             flex-shrink: 0;
         }
 
-        /* FORM LOGIN & REGISTER */
+        .btn-logout:hover {
+            background: #c0392b;
+        }
+
+        /* AUTH BOX (LOGIN & REGISTER) */
         .auth-box {
             background: #ffffff;
             border: 1px solid #e2e8e5;
@@ -645,7 +648,7 @@
     <!-- MAIN CONTAINER -->
     <div class="container">
 
-        <!-- 4 GRID MENU KOTAK KECIL -->
+        <!-- 4 GRID MENU KOTAK -->
         <div class="grid-menu">
             <div class="grid-card" onclick="openModal('modalQuotes')">
                 <i class="fa-solid fa-quote-left"></i>
@@ -667,26 +670,25 @@
 
         <!-- CHAT ROOM -->
         <div class="main-content">
-            
-<div class="chat-header">
-    <div class="chat-title">
-        <i class="fa-solid fa-comments"></i> Ruang Sapa & Silaturahmi
-    </div>
-    <button id="btnAdminReset" class="btn-reset-chat" onclick="resetChatByAdmin()">
-        <i class="fa-solid fa-trash"></i> Reset Chat
-    </button>
-</div>
+            <div class="chat-header">
+                <div class="chat-title">
+                    <i class="fa-solid fa-comments"></i> Ruang Sapa & Silaturahmi
+                </div>
+                <button id="btnAdminReset" class="btn-reset-chat" onclick="resetChatByAdmin()">
+                    <i class="fa-solid fa-trash"></i> Reset Chat
+                </button>
+            </div>
 
-            <!-- CHAT DISPLAY BOX (SELALU MUNCUL DI BERANDA) -->
+            <!-- CHAT DISPLAY BOX -->
             <div class="chat-box" id="chatBox"></div>
 
-            <!-- FORM KIRIM CHAT (TAMPIL SAAT SUDAH LOGIN) -->
+            <!-- FORM KIRIM CHAT (TAMPIL SAAT LOGIN) -->
             <div class="chat-send-form" id="chatSendForm" style="display: none;">
                 <input type="text" id="chatInputMsg" placeholder="Tulis pesan sapaan Anda...">
                 <button class="btn-send" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i> Kirim</button>
             </div>
 
-            <!-- WELCOME BANNER (TAMPIL SAAT SUDAH LOGIN) -->
+            <!-- WELCOME BANNER (TAMPIL SAAT LOGIN) -->
             <div class="welcome-banner" id="welcomeBanner">
                 <span>Selamat datang, <strong id="userDisplayName"></strong>!</span>
                 <button class="btn-logout" onclick="logoutUser()">Keluar</button>
@@ -804,7 +806,7 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT FIXED REALTIME PERSISTENCE -->
+    <!-- JAVASCRIPT SYSTEM -->
     <script>
         // SLIDER AUTOMATIS
         let slideIndex = 0;
@@ -851,18 +853,14 @@
 
         function initApp() {
             try {
-                // Load & Ensure Chats Exist
-                let storedChats = localStorage.getItem('ISTAL_CHATS');
-                let chatsArr = storedChats ? JSON.parse(storedChats) : null;
-                
-                if (!chatsArr || !Array.isArray(chatsArr) || chatsArr.length === 0) {
-                    chatsArr = defaultChats;
+                // Inisialisasi chat awal jika belum pernah ada key ISTAL_CHATS sama sekali
+                if (localStorage.getItem('ISTAL_CHATS') === null) {
                     localStorage.setItem('ISTAL_CHATS', JSON.stringify(defaultChats));
                 }
 
                 renderChats();
 
-                // Load User Session
+                // Cek Sesi Login User
                 const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
                 if (activeUser) {
                     showLoggedInUI(activeUser);
@@ -871,7 +869,6 @@
                 }
             } catch (err) {
                 console.error("Initialization Error:", err);
-                localStorage.setItem('ISTAL_CHATS', JSON.stringify(defaultChats));
                 renderChats();
                 showLoggedOutUI();
             }
@@ -931,32 +928,48 @@
             document.getElementById('welcomeBanner').style.display = 'flex';
             document.getElementById('userDisplayName').innerText = username;
             document.getElementById('chatSendForm').style.display = 'flex';
+
+            // Munculkan tombol reset HANYA jika username mengandung kata 'admin'
+            const btnReset = document.getElementById('btnAdminReset');
+            if (btnReset) {
+                const isAdmin = username.toLowerCase().includes('admin');
+                btnReset.style.display = isAdmin ? 'inline-block' : 'none';
+            }
+
             renderChats();
         }
 
-function showLoggedInUI(username) {
-    document.getElementById('authBox').style.display = 'none';
-    document.getElementById('welcomeBanner').style.display = 'flex';
-    document.getElementById('userDisplayName').innerText = username;
-    document.getElementById('chatSendForm').style.display = 'flex';
+        function showLoggedOutUI() {
+            document.getElementById('authBox').style.display = 'block';
+            document.getElementById('welcomeBanner').style.display = 'none';
+            document.getElementById('chatSendForm').style.display = 'none';
 
-    // Cek apakah user yang login adalah Admin
-    const btnReset = document.getElementById('btnAdminReset');
-    if (btnReset) {
-        // Daftar nama username yang dianggap sebagai Admin (bebas kamu sesuaikan)
-        const isAdmin = ['sutur00', 'sutur00'].includes(username.toLowerCase());
-        btnReset.style.display = isAdmin ? 'inline-block' : 'none';
-    }
+            // Sembunyikan tombol reset saat logout
+            const btnReset = document.getElementById('btnAdminReset');
+            if (btnReset) btnReset.style.display = 'none';
 
-    renderChats();
-}
-function logoutUser() {
-    // 1. Hapus sesi login pengguna
-    localStorage.removeItem('ISTAL_ACTIVE_USER');
-    
-    // 2. Reload halaman otomatis untuk reset total tampilan
-    location.reload();
-}
+            renderChats();
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('ISTAL_ACTIVE_USER');
+            location.reload();
+        }
+
+        function resetChatByAdmin() {
+            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+            
+            if (!activeUser || !activeUser.toLowerCase().includes('admin')) {
+                alert('Akses ditolak! Hanya akun Admin yang dapat menghapus seluruh chat.');
+                return;
+            }
+
+            if (confirm('Apakah Anda yakin ingin menghapus SELURUH pesan chat?')) {
+                localStorage.setItem('ISTAL_CHATS', JSON.stringify([]));
+                renderChats();
+                alert('Semua pesan chat berhasil dibersihkan!');
+            }
+        }
 
         function sendChatMessage() {
             const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
@@ -969,7 +982,7 @@ function logoutUser() {
             const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
             const dateStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
 
-            let chats = JSON.parse(localStorage.getItem('ISTAL_CHATS')) || defaultChats;
+            let chats = JSON.parse(localStorage.getItem('ISTAL_CHATS')) || [];
             chats.push({ 
                 username: activeUser, 
                 text: text, 
@@ -987,10 +1000,17 @@ function logoutUser() {
             if (!chatBox) return;
 
             let rawChats = localStorage.getItem('ISTAL_CHATS');
-            let chats = rawChats ? JSON.parse(rawChats) : defaultChats;
+            let chats = rawChats ? JSON.parse(rawChats) : [];
 
+            // Jika chat kosong, tampilkan placeholder ramah
             if (!Array.isArray(chats) || chats.length === 0) {
-                chats = defaultChats;
+                chatBox.innerHTML = `
+                    <div style="text-align: center; color: #888; padding: 40px 10px; font-size: 0.8rem;">
+                        <i class="fa-solid fa-comments" style="font-size: 2rem; margin-bottom: 8px; color: #ccc;"></i><br>
+                        Belum ada pesan silaturahmi.
+                    </div>
+                `;
+                return;
             }
 
             let htmlContent = '';
@@ -1020,9 +1040,8 @@ function logoutUser() {
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        // INISIALISASI SAAT DOM SIAP
+        // DOM READY LOADER
         document.addEventListener('DOMContentLoaded', initApp);
-        window.addEventListener('load', renderChats);
     </script>
 </body>
 </html>
