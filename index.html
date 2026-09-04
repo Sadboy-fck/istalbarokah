@@ -2,539 +2,1242 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ISTAL - Ngaji Keliling Antar Pemuda</title>
-
-    <!-- FontAwesome Icon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <!-- Firebase SDK (Compat Version) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISTAL - Istiqomah Al Barokah</title>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --primary-green: #0d331a;
-            --accent-green: #144d28;
-            --bg-light: #f4f6f5;
-            --card-bg: #ffffff;
-            --text-dark: #1f2937;
-            --text-muted: #6b7280;
-            --danger-red: #e74c3c;
-            --chat-bubble-bg: #f0f4f1;
+            --bg-dark-green: #092c20;
+            --secondary-green: #114232;
+            --accent-gold: #d4af37;
+            --light-gold: #f3ce5e;
+            --pure-white: #ffffff;
+            --off-white: #f4f7f5;
+            --text-dark: #1c2826;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            font-family: 'Poppins', sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #1a1a1a;
+            background-color: var(--off-white);
             color: var(--text-dark);
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
+            line-height: 1.4;
         }
 
-        .app-wrapper {
+        .arabic-text {
+            font-family: 'Amiri', serif;
+        }
+
+        /* HEADER SECTION */
+        header {
+            background: linear-gradient(180deg, #051d15 0%, var(--bg-dark-green) 100%);
+            color: var(--pure-white);
+            text-align: center;
+            padding: 12px 10px 10px;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        .bismillah {
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+            margin-bottom: 2px;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--pure-white);
+            line-height: 1;
+        }
+
+        .header-caption {
+            font-size: 0.75rem;
+            color: var(--light-gold);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        /* WAKTU SHOLAT */
+        .prayer-container {
             width: 100%;
-            max-width: 480px;
-            background-color: var(--bg-light);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
-            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        /* Banner Atas */
-        .banner-container {
-            padding: 12px 16px;
+        .prayer-bar {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .prayer-item {
+            font-size: 0.62rem;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px 2px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .prayer-item span {
+            display: block;
+            color: #d0ded8;
+        }
+
+        .prayer-item strong {
+            display: block;
+            color: var(--light-gold);
+            font-size: 0.68rem;
+            margin-top: 1px;
+        }
+
+        /* RUNNING TEXT */
+        .marquee-container {
+            background-color: var(--secondary-green);
+            color: var(--pure-white);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 4px 0;
+            font-size: 0.75rem;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+
+        .marquee-content i {
+            color: var(--accent-gold);
+            margin-right: 4px;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* SLIDER SECTION */
+        .slider-section {
+            padding: 10px 10px 0;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
             background: #000;
         }
 
-        .banner-card {
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 300%;
+        }
+
+        .slide {
+            width: 33.333%;
             position: relative;
+        }
+
+        .slide img {
             width: 100%;
             height: 160px;
-            border-radius: 16px;
-            overflow: hidden;
-            background: #000;
-        }
-
-        .banner-card img {
-            width: 100%;
-            height: 100%;
             object-fit: cover;
-            opacity: 0.75;
+            display: block;
         }
 
-        .banner-text {
+        .slide-caption {
             position: absolute;
-            bottom: 12px;
-            left: 0;
-            right: 0;
+            bottom: 0;
+            left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(9, 44, 32, 0.88));
+            color: var(--pure-white);
+            padding: 12px 10px 6px;
             text-align: center;
-            color: #fff;
-            font-weight: 600;
-            font-size: 1.05rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            font-size: 0.75rem;
         }
 
-        /* Navigasi Grid Menu (4 Tombol Putih) */
-        .menu-grid {
+        /* LAYOUT CONTAINER */
+        .container {
+            max-width: 750px;
+            margin: 12px auto;
+            padding: 0 10px;
+        }
+
+        /* 4 GRID MENU KOTAK */
+        .grid-menu {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            padding: 12px 16px;
-        }
-
-        .menu-item {
-            background: var(--card-bg);
-            border-radius: 14px;
-            padding: 14px 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             gap: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            cursor: pointer;
-            border: 1px solid #e5e7eb;
-            transition: transform 0.1s ease;
+            margin-bottom: 15px;
         }
 
-        .menu-item:active {
-            transform: scale(0.95);
-        }
-
-        .menu-item i {
-            font-size: 1.4rem;
-            color: var(--primary-green);
-        }
-
-        .menu-item span {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-dark);
+        .grid-card {
+            background-color: var(--pure-white);
+            border: 1px solid rgba(9, 44, 32, 0.15);
+            border-radius: 8px;
+            padding: 8px 2px;
             text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .grid-card:hover, .grid-card:active {
+            background-color: var(--bg-dark-green);
+            border-color: var(--accent-gold);
+        }
+
+        .grid-card i {
+            font-size: 1.2rem;
+            color: var(--bg-dark-green);
+            margin-bottom: 3px;
+            display: block;
+        }
+
+        .grid-card span {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-dark);
             line-height: 1.1;
         }
 
-        /* Kartu Utama Chat (Ruang Sapa & Silaturahmi) */
-        .chat-section {
-            flex: 1;
-            background: var(--card-bg);
-            margin-top: 8px;
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
-            border: 1px solid #e5e7eb;
-            border-bottom: none;
+        .grid-card:hover i { color: var(--accent-gold); }
+        .grid-card:hover span { color: var(--pure-white); }
+
+        /* CHAT ROOM CONTAINER */
+        .main-content {
+            background: var(--pure-white);
+            border-radius: 12px;
+            padding: 14px;
+            border-top: 4px solid var(--bg-dark-green);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            overflow: hidden;
         }
 
         .chat-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding-bottom: 14px;
-            border-bottom: 1px solid #f0f0f0;
-            margin-bottom: 12px;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #edf2f0;
+            padding-bottom: 8px;
+            gap: 8px;
         }
 
         .chat-title {
+            color: var(--bg-dark-green);
+            font-size: 0.95rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .chat-title i {
-            font-size: 1.5rem;
-            color: var(--primary-green);
-        }
-
-        .chat-title h3 {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: var(--primary-green);
-            line-height: 1.2;
-        }
-
-        /* Tombol Reset Chat Khusus Admin */
         .btn-reset-chat {
-            background-color: var(--danger-red);
-            color: #fff;
+            background: #e74c3c;
+            color: #ffffff;
             border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
             font-weight: 600;
             cursor: pointer;
-            display: none; /* Otomatis 'flex' jika login sebagai suturist4l */
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Container Pesan Chat */
-        .chat-box {
-            flex: 1;
-            min-height: 280px;
-            max-height: 420px;
-            overflow-y: auto;
-            border: 1px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            background: #fafafa;
-        }
-
-        .chat-bubble-item {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-        }
-
-        .user-avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background-color: var(--primary-green);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.95rem;
+            display: none;
+            white-space: nowrap;
             flex-shrink: 0;
         }
 
-        .bubble-content {
-            background-color: var(--chat-bubble-bg);
-            padding: 8px 14px;
-            border-radius: 12px;
-            display: inline-block;
+        .btn-reset-chat:hover {
+            background: #c0392b;
+        }
+
+        /* CHAT DISPLAY BOX */
+        .chat-box {
+            height: 240px;
+            min-height: 200px;
+            border: 1px solid #e2e8e5;
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            background: #fafcfb;
+            margin-bottom: 10px;
+            display: block !important;
+        }
+
+        .chat-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .chat-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--bg-dark-green);
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chat-content-wrapper {
             max-width: 85%;
         }
 
-        .bubble-username {
-            font-size: 0.85rem;
-            font-weight: 800;
-            color: var(--primary-green);
+        .chat-text-bg {
+            background: #eef5f2;
+            padding: 7px 10px;
+            border-radius: 0 10px 10px 10px;
+            font-size: 0.8rem;
+            color: #2c3e50;
+            word-break: break-word;
+        }
+
+        .chat-username {
+            font-weight: 700;
+            color: var(--bg-dark-green);
+            font-size: 0.72rem;
             margin-bottom: 2px;
+        }
+
+        .chat-meta {
+            font-size: 0.62rem;
+            color: #888888;
+            margin-top: 2px;
+            margin-left: 2px;
             display: flex;
             align-items: center;
             gap: 4px;
         }
 
-        .bubble-text {
-            font-size: 0.9rem;
-            color: #2c3e50;
-            word-break: break-word;
-            line-height: 1.3;
-        }
-
-        .bubble-meta {
-            font-size: 0.68rem;
-            color: var(--text-muted);
-            margin-top: 4px;
+        /* INPUT CHAT FORM */
+        .chat-send-form {
             display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-delete-msg {
-            color: var(--danger-red);
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-size: 0.72rem;
-            font-weight: 600;
-        }
-
-        /* Area Input Chat */
-        .chat-input-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
+            gap: 6px;
+            margin-top: 10px;
+            width: 100%;
             align-items: center;
         }
 
-        .chat-input-row input {
+        .chat-send-form input {
             flex: 1;
-            padding: 12px 16px;
-            border-radius: 10px;
-            border: 1px solid #d1d5db;
+            min-width: 0;
+            padding: 9px 12px;
+            border: 1.5px solid #dcdfe1;
+            border-radius: 8px;
             outline: none;
-            font-size: 0.88rem;
-            background: #fff;
+            font-size: 0.8rem;
         }
 
-        .chat-input-row input:focus {
-            border-color: var(--primary-green);
+        .chat-send-form input:focus {
+            border-color: var(--bg-dark-green);
         }
 
         .btn-send {
-            background-color: var(--primary-green);
+            background: var(--bg-dark-green);
+            color: var(--pure-white);
+            border: none;
+            padding: 9px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-send:hover {
+            background: var(--secondary-green);
+        }
+
+        /* WELCOME BANNER */
+        .welcome-banner {
+            background: #f0f7f3;
+            border: 1px solid #d4e6db;
+            border-left: 4px solid var(--accent-gold);
+            padding: 8px 12px;
+            font-size: 0.78rem;
+            color: var(--bg-dark-green);
+            border-radius: 8px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            gap: 8px;
+        }
+
+        .btn-logout {
+            background: #e74c3c;
             color: #fff;
             border: none;
-            padding: 12px 18px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 0.9rem;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
             flex-shrink: 0;
         }
 
-        .user-status-bar {
-            margin-bottom: 8px;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .btn-logout:hover {
+            background: #c0392b;
         }
 
-        .user-status-bar span b {
-            color: var(--primary-green);
+        /* AUTH BOX (LOGIN & REGISTER) */
+        .auth-box {
+            background: #ffffff;
+            border: 1px solid #e2e8e5;
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #edf2f0;
+            padding-bottom: 6px;
+        }
+
+        .auth-tab {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #7f8c8d;
             cursor: pointer;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .auth-tab.active {
+            color: var(--bg-dark-green);
+        }
+
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--bg-dark-green);
+            border-radius: 2px;
+        }
+
+        .auth-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 0.75rem;
+        }
+
+        .auth-inputs input {
+            width: 100%;
+            padding: 8px 10px 8px 30px;
+            border: 1.5px solid #dcdfe1;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            outline: none;
+        }
+
+        .auth-inputs input:focus {
+            border-color: var(--bg-dark-green);
+        }
+
+        .btn-auth {
+            background: var(--bg-dark-green);
+            color: #fff;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+
+        /* MODAL POPUP */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .modal-content {
+            background: var(--pure-white);
+            border-radius: 8px;
+            max-width: 420px;
+            width: 100%;
+            padding: 15px;
+            position: relative;
+            border-top: 4px solid var(--accent-gold);
+            animation: popIn 0.2s ease;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 6px; right: 10px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .modal-header {
+            color: var(--bg-dark-green);
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .modal-body { text-align: center; margin-top: 10px; }
+        .modal-body img { max-width: 100%; border-radius: 4px; }
+
+        /* FOOTER */
+        footer {
+            background: var(--bg-dark-green);
+            color: var(--pure-white);
+            padding: 20px 10px 12px;
+            border-top: 3px solid var(--accent-gold);
+        }
+
+        .footer-grid {
+            max-width: 750px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            font-size: 0.75rem;
+        }
+
+        .footer-col h4 {
+            color: var(--accent-gold);
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 2px;
+        }
+
+        .footer-col p { color: #d0ded8; }
+
+        .social-links a {
+            color: var(--pure-white);
+            font-size: 1rem;
+            margin-right: 8px;
+            text-decoration: none;
+        }
+
+        .watermark {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.68rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 600px) {
+            .slide img { height: 130px; }
+            .grid-menu { gap: 5px; }
         }
     </style>
 </head>
 <body>
 
-<div class="app-wrapper">
+    <!-- HEADER SECTION -->
+    <header>
+        <div class="arabic-text bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+        <h1 class="header-title">ISTAL</h1>
+        <p class="header-caption">istiqomah al barokah</p>
 
-    <!-- 1. Banner Atas -->
-    <div class="banner-container">
-        <div class="banner-card">
-            <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=800&q=80" alt="Ngaji Keliling">
-            <div class="banner-text">Ngaji Keliling Antar Pemuda</div>
-        </div>
-    </div>
-
-    <!-- 2. Grid Menu 4 Tombol Putih -->
-    <div class="menu-grid">
-        <div class="menu-item" onclick="alert('Fitur Video belum tersedia')">
-            <i class="fa-solid fa-circle-play"></i>
-            <span>Video</span>
-        </div>
-        <div class="menu-item" onclick="alert('Fitur Gallery belum tersedia')">
-            <i class="fa-solid fa-image"></i>
-            <span>Gallery</span>
-        </div>
-        <div class="menu-item" onclick="alert('Fitur Sodaqoh belum tersedia')">
-            <i class="fa-solid fa-qrcode"></i>
-            <span>Sodaqoh</span>
-        </div>
-        <div class="menu-item" onclick="alert('Fitur Surat Kegiatan belum tersedia')">
-            <i class="fa-solid fa-scroll"></i>
-            <span>Surat<br>Kegiatan</span>
-        </div>
-    </div>
-
-    <!-- 3. Section Ruang Sapa & Silaturahmi (Chat Realtime) -->
-    <div class="chat-section">
-        <div class="chat-header">
-            <div class="chat-title">
-                <i class="fa-solid fa-comments"></i>
-                <h3>Ruang Sapa &<br>Silaturahmi</h3>
-            </div>
-            <!-- Tombol Reset Chat khusus admin suturist4l -->
-            <button class="btn-reset-chat" id="btnResetChat" onclick="resetAllChats()">
-                <i class="fa-solid fa-trash-can"></i> Reset Chat
-            </button>
-        </div>
-
-        <div class="user-status-bar">
-            <span>Login sebagai: <b id="displayUsername" onclick="changeUsername()" title="Klik untuk ganti">Anonim</b></span>
-            <span><i class="fa-solid fa-circle" style="color: #2ecc71; font-size: 0.6rem;"></i> Realtime</span>
-        </div>
-
-        <!-- Box Daftar Chat -->
-        <div class="chat-box" id="chatBox">
-            <div style="text-align: center; color: var(--text-muted); padding: 30px; font-size: 0.85rem;">
-                <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.2rem; margin-bottom: 6px;"></i><br>
-                Memuat pesan...
+        <!-- WAKTU SHOLAT -->
+        <div class="prayer-container">
+            <div class="prayer-bar">
+                <div class="prayer-item"><span>Subuh</span><strong>04:35</strong></div>
+                <div class="prayer-item"><span>Dzuhur</span><strong>11:54</strong></div>
+                <div class="prayer-item"><span>Ashar</span><strong>15:12</strong></div>
+                <div class="prayer-item"><span>Maghrib</span><strong>17:56</strong></div>
+                <div class="prayer-item"><span>Isya</span><strong>19:05</strong></div>
             </div>
         </div>
+    </header>
 
-        <!-- Input Chat & Kirim -->
-        <div class="chat-input-row">
-            <input type="text" id="chatInput" placeholder="Tulis pesan sapaan Anda..." autocomplete="off">
-            <button class="btn-send" onclick="sendChatMessage()">
-                <i class="fa-solid fa-paper-plane"></i> Kirim
-            </button>
+    <!-- RUNNING TEXT -->
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <i class="fa-solid fa-bullhorn"></i> INFO TERBARU: Pengajian Rutin Malam Jumat pkl 19.30 WIB | Mari salurkan Sodaqoh terbaik Anda | Jaga istiqomah & ukhuwah islamiyah.
         </div>
     </div>
 
-</div>
+    <!-- SLIDER -->
+    <div class="slider-section">
+        <div class="slider-container">
+            <div class="slider-wrapper" id="sliderWrapper">
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=800&q=80" alt="Kegiatan 1">
+                    <div class="slide-caption">Kajian & Silaturahmi Rutin ISTAL</div>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=800&q=80" alt="Kegiatan 2">
+                    <div class="slide-caption">Ngaji Keliling Antar Pemuda</div>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=800&q=80" alt="Kegiatan 3">
+                    <div class="slide-caption">Program Sodaqoh & Peduli Umat</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<script>
-    // 1. Firebase Configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyChUPdkwJx8yGsOCofb8iTtVWaxysRB7mc",
-        authDomain: "istalapp-8325d.firebaseapp.com",
-        databaseURL: "https://istalapp-8325d-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "istalapp-8325d",
-        storageBucket: "istalapp-8325d.firebasestorage.app",
-        messagingSenderId: "167010805275",
-        appId: "1:167010805275:web:b0bc9ab21edcf5dbee7abe"
-    };
+    <!-- MAIN CONTAINER -->
+    <div class="container">
 
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    const chatRef = database.ref('chats');
+        <!-- 4 GRID MENU KOTAK -->
+        <div class="grid-menu">
+            <div class="grid-card" onclick="openModal('modalVideo')">
+                <i class="fa-brands fa-youtube"></i>
+                <span>Video</span>
+            </div>
+            <div class="grid-card" onclick="openModal('modalGallery')">
+                <i class="fa-solid fa-images"></i>
+                <span>Gallery</span>
+            </div>
+            <div class="grid-card" onclick="openModal('modalSodaqoh')">
+                <i class="fa-solid fa-qrcode"></i>
+                <span>Sodaqoh</span>
+            </div>
+            <div class="grid-card" onclick="openModal('modalKegiatan')">
+                <i class="fa-solid fa-scroll"></i>
+                <span>Surat Kegiatan</span>
+            </div>
+        </div>
 
-    const ADMIN_USERNAME = 'suturist4l';
+        <!-- CHAT ROOM -->
+        <div class="main-content">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <i class="fa-solid fa-comments"></i> Ruang Sapa & Silaturahmi
+                </div>
+                <button id="btnAdminReset" class="btn-reset-chat" onclick="resetChatByAdmin()">
+                    <i class="fa-solid fa-trash"></i> Reset Chat
+                </button>
+            </div>
 
-    // 2. User Management
-    let currentUser = localStorage.getItem('CURRENT_USER');
-    if (!currentUser) {
-        currentUser = prompt("Masukkan Username Anda:") || "istalalbarokah";
-        localStorage.setItem('CURRENT_USER', currentUser);
-    }
-    document.getElementById('displayUsername').innerText = currentUser;
+            <!-- CHAT DISPLAY BOX -->
+            <div class="chat-box" id="chatBox"></div>
 
-    // Cek Akses Admin untuk Menampilkan Tombol Reset Chat
-    const isCurrentAdmin = (currentUser.toLowerCase() === ADMIN_USERNAME.toLowerCase());
-    if (isCurrentAdmin) {
-        document.getElementById('btnResetChat').style.display = 'flex';
-    }
+            <!-- FORM KIRIM CHAT -->
+            <div class="chat-send-form" id="chatSendForm" style="display: none;">
+                <input type="text" id="chatInputMsg" placeholder="Tulis pesan sapaan Anda...">
+                <button class="btn-send" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i> Kirim</button>
+            </div>
 
-    function changeUsername() {
-        const newName = prompt("Masukkan Username baru:", currentUser);
-        if (newName && newName.trim() !== "") {
-            currentUser = newName.trim();
-            localStorage.setItem('CURRENT_USER', currentUser);
-            document.getElementById('displayUsername').innerText = currentUser;
+            <!-- WELCOME BANNER -->
+            <div class="welcome-banner" id="welcomeBanner">
+                <span>Selamat datang, <strong id="userDisplayName"></strong>!</span>
+                <button class="btn-logout" onclick="logoutUser()">Keluar</button>
+            </div>
+
+            <!-- FORM LOGIN & REGISTER -->
+            <div class="auth-box" id="authBox">
+                <div class="auth-tabs">
+                    <span class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Masuk (Login)</span>
+                    <span class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Buat Akun Baru</span>
+                </div>
+                <div class="auth-inputs">
+                    <div class="input-group">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="authUsername" placeholder="Username / Nama Anda">
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="authPassword" placeholder="Kata Sandi">
+                    </div>
+                    <button class="btn-auth" id="btnAuthSubmit" onclick="handleAuth()">Masuk Ke Chat</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL POPUP VIDEO YOUTUBE ISTAL -->
+    <div class="modal" id="modalVideo">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modalVideo')">&times;</span>
+            <div class="modal-header">
+                <i class="fa-brands fa-youtube" style="color: var(--bg-dark-green); font-size: 1.2rem;"></i> Channel Video ISTAL
+            </div>
+            <div class="modal-body">
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 10px; background: #000;">
+                    <iframe style="position: absolute; top:0; left: 0; width: 100%; height: 100%; border:0;" 
+                        src="https://www.youtube.com/embed/videoseries?list=PL" 
+                        title="YouTube video ISTAL" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen></iframe>
+                </div>
+                <p style="font-size: 0.78rem; color: #444; margin-bottom: 12px; line-height: 1.3;">
+                    Tonton dokumentasi kegiatan, kajian rutin, serta transparansi penyaluran infaq & sodaqoh di Channel YouTube Resmi ISTAL.
+                </p>
+                <a href="https://www.youtube.com" target="_blank" class="btn-send" style="text-decoration: none; display: inline-flex; justify-content: center; width: 100%;">
+                    <i class="fa-brands fa-youtube"></i> Buka Channel YouTube
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GALERI FOTO KEGIATAN (WITH ADMIN UPLOAD SYSTEM) -->
+    <div class="modal" id="modalGallery">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modalGallery')">&times;</span>
+            <div class="modal-header"><i class="fa-solid fa-images"></i> Galeri Foto Kegiatan</div>
+            
+            <!-- PANEL UPLOAD KHUSUS ADMIN (TIDAK TAMPIL UNTUK USER BIASA) -->
+            <div id="adminGalleryControls" style="display: none; background: #eef5f2; border: 1.5px dashed var(--bg-dark-green); padding: 10px; border-radius: 8px; margin-top: 10px; text-align: left;">
+                <div style="font-size: 0.75rem; font-weight: 700; color: var(--bg-dark-green); margin-bottom: 6px;">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Menu Admin: Upload Foto Galeri Baru
+                </div>
+                <div style="display: flex; gap: 6px; flex-direction: column;">
+                    <input type="file" id="galleryFileInput" accept="image/*" style="font-size: 0.75rem; background: #fff; padding: 6px; border-radius: 6px; border: 1px solid #ccc; width: 100%;">
+                    <button class="btn-send" onclick="uploadGalleryPhoto()" style="padding: 7px 12px; font-size: 0.75rem; justify-content: center; margin-top: 4px;">
+                        <i class="fa-solid fa-upload"></i> Upload Ke Galeri
+                    </button>
+                </div>
+            </div>
+
+            <!-- GRID DISPLAY FOTO GALERI -->
+            <div class="modal-body">
+                <div id="galleryGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                    <!-- Foto di-render dinamis dari JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PREVIEW FOTO FULLSCREEN (PERBESAR FOTO) -->
+    <div class="modal" id="modalFullImage" style="background: rgba(0,0,0,0.92); z-index: 2000;">
+        <span class="close-btn" onclick="closeModal('modalFullImage')" style="color: #fff; top: 15px; right: 20px; font-size: 2rem;">&times;</span>
+        <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; padding: 20px;">
+            <img id="imgFullViewer" src="" alt="Preview Foto Full" style="max-width: 95%; max-height: 85vh; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+        </div>
+    </div>
+
+    <!-- MODAL SODAQOH -->
+    <div class="modal" id="modalSodaqoh">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modalSodaqoh')">&times;</span>
+            <div class="modal-header"><i class="fa-solid fa-qrcode"></i> Infaq & Sodaqoh ISTAL</div>
+            <div class="modal-body">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=SodaqohISTAL" alt="QRIS Sodaqoh" style="width: 150px; margin: 5px auto; border: 2px solid var(--accent-gold); padding: 4px; background: #fff;">
+                <p style="font-size: 0.78rem; color: #444; margin-top: 8px;">
+                    Scan QRIS di atas untuk menyalurkan infaq & sodaqoh terbaik Anda.<br>
+                    <em>"Sedekah itu tidak akan mengurangi harta." (HR. Muslim)</em>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL KEGIATAN -->
+    <div class="modal" id="modalKegiatan">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modalKegiatan')">&times;</span>
+            <div class="modal-header"><i class="fa-solid fa-scroll"></i> Agenda Kegiatan ISTAL</div>
+            <div class="modal-body" style="text-align: left; font-size: 0.8rem;">
+                <div style="background: #eef4f1; padding: 8px; border-radius: 5px; margin-bottom: 6px;">
+                    <strong>1. Rutinan Malam Jumat</strong><br>
+                    Pembacaan Surat Yasin, Tahlil, dan Hadroh bersama jamaah.
+                </div>
+                <div style="background: #eef4f1; padding: 8px; border-radius: 5px; margin-bottom: 6px;">
+                    <strong>2. Ngaji Keliling</strong><br>
+                    Silaturahmi dan kajian fikih/akhlak antar rumah jamaah.
+                </div>
+                <div style="background: #eef4f1; padding: 8px; border-radius: 5px;">
+                    <strong>3. Berbagi Jum'at Berkah</strong><br>
+                    Penyaluran paket makanan dari dana hasil infaq QRIS.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Komunitas ISTAL</h4>
+                <p>Istiqomah Al Barokah — Wadah pemuda & jamaah untuk mempererat silaturahmi dan kajian islam.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Informasi & Lokasi</h4>
+                <p><strong>Pengembang:</strong> Tim ISTAL Tech</p>
+                <p><strong>Lokasi:</strong> Bandung, Jawa Barat</p>
+            </div>
+            <div class="footer-col">
+                <h4>Sosial Media</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="watermark">
+            &copy; 2026 ISTAL (Istiqomah Al Barokah). Built for GitHub Pages.
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT SYSTEM -->
+    <script>
+        // SLIDER AUTOMATIS
+        let slideIndex = 0;
+        const sliderWrapper = document.getElementById('sliderWrapper');
+        function autoSlide() {
+            slideIndex++;
+            if (slideIndex > 2) slideIndex = 0;
+            sliderWrapper.style.transform = `translateX(-${slideIndex * 33.333}%)`;
+        }
+        setInterval(autoSlide, 4000);
+
+        // AKUN & CHAT SYSTEM
+        let currentAuthMode = 'login';
+        
+        // AKUN ADMIN RESMI
+        const ADMIN_USERNAME = 'suturist4l';
+        const ADMIN_PASSWORD = 'suturist4l';
+
+        const defaultChats = [
+            { 
+                username: 'Admin ISTAL', 
+                text: "Assalamu'alaikum kawan-kawan! Selamat berkunjung di aplikasi ISTAL.", 
+                time: '08:00',
+                date: '03/09/2026'
+            }
+        ];
+
+        // DEFAULT FOTO GALERI
+        const defaultGallery = [
+            { id: 101, url: 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=400&q=80' },
+            { id: 102, url: 'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=400&q=80' },
+            { id: 103, url: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=400&q=80' },
+            { id: 104, url: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=400&q=80' }
+        ];
+
+        function initApp() {
+            try {
+                if (localStorage.getItem('ISTAL_CHATS') === null) {
+                    localStorage.setItem('ISTAL_CHATS', JSON.stringify(defaultChats));
+                }
+
+                if (localStorage.getItem('ISTAL_GALLERY') === null) {
+                    localStorage.setItem('ISTAL_GALLERY', JSON.stringify(defaultGallery));
+                }
+
+                renderChats();
+                renderGallery();
+
+                const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+                if (activeUser) {
+                    showLoggedInUI(activeUser);
+                } else {
+                    showLoggedOutUI();
+                }
+            } catch (err) {
+                console.error("Initialization Error:", err);
+                renderChats();
+                renderGallery();
+                showLoggedOutUI();
+            }
+        }
+
+        // MODAL CONTROLLER
+        function openModal(id) { 
+            document.getElementById(id).style.display = 'flex'; 
+            if (id === 'modalGallery') {
+                renderGallery();
+            }
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function openFullImage(url) {
+            document.getElementById('imgFullViewer').src = url;
+            openModal('modalFullImage');
+        }
+        
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let i = 0; i < modals.length; i++) {
+                if (event.target == modals[i]) modals[i].style.display = "none";
+            }
+        }
+
+        function switchAuthTab(mode) {
+            currentAuthMode = mode;
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegister = document.getElementById('tabRegister');
+            const btnSubmit = document.getElementById('btnAuthSubmit');
+
+            if (mode === 'login') {
+                tabLogin.classList.add('active');
+                tabRegister.classList.remove('active');
+                btnSubmit.innerText = 'Masuk Ke Chat';
+            } else {
+                tabRegister.classList.add('active');
+                tabLogin.classList.remove('active');
+                btnSubmit.innerText = 'Daftar Akun Baru';
+            }
+        }
+
+        function handleAuth() {
+            try {
+                const usernameInput = document.getElementById('authUsername').value.trim();
+                const passwordInput = document.getElementById('authPassword').value.trim();
+
+                if (!usernameInput || !passwordInput) {
+                    alert('Harap isi Username dan Kata Sandi!');
+                    return;
+                }
+
+                // Cek Login Khusus Admin
+                if (currentAuthMode === 'login' && usernameInput.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
+                    if (passwordInput === ADMIN_PASSWORD) {
+                        localStorage.setItem('ISTAL_ACTIVE_USER', ADMIN_USERNAME);
+                        showLoggedInUI(ADMIN_USERNAME);
+                        alert('Selamat datang Admin suturist4l! Fitur Upload Foto Galeri telah aktif.');
+                        return;
+                    } else {
+                        alert('Kata Sandi Admin Salah!');
+                        return;
+                    }
+                }
+
+                // Proteksi Registrasi Username Admin
+                if (currentAuthMode === 'register' && usernameInput.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
+                    alert('Username ini diproteksi khusus Admin!');
+                    return;
+                }
+
+                // Ambil daftar user biasa
+                let users = JSON.parse(localStorage.getItem('ISTAL_USERS')) || [];
+                if (!Array.isArray(users)) users = [];
+
+                if (currentAuthMode === 'register') {
+                    const exists = users.find(u => u && u.username && u.username.toLowerCase() === usernameInput.toLowerCase());
+                    if (exists) {
+                        alert('Username sudah terdaftar! Silakan pilih nama lain.');
+                        return;
+                    }
+
+                    users.push({ username: usernameInput, password: passwordInput });
+                    localStorage.setItem('ISTAL_USERS', JSON.stringify(users));
+                    localStorage.setItem('ISTAL_ACTIVE_USER', usernameInput);
+                    showLoggedInUI(usernameInput);
+                    alert('Akun berhasil dibuat!');
+                } else {
+                    // Login User Biasa
+                    const user = users.find(u => u && u.username && u.username.toLowerCase() === usernameInput.toLowerCase() && u.password === passwordInput);
+                    if (user) {
+                        localStorage.setItem('ISTAL_ACTIVE_USER', user.username);
+                        showLoggedInUI(user.username);
+                    } else {
+                        alert('Username atau Kata Sandi salah!');
+                    }
+                }
+            } catch (err) {
+                console.error("Auth Error:", err);
+                alert("Terjadi kesalahan sistem.");
+            }
+        }
+
+        function showLoggedInUI(username) {
+            document.getElementById('authBox').style.display = 'none';
+            document.getElementById('welcomeBanner').style.display = 'flex';
+            document.getElementById('userDisplayName').innerText = username;
+            document.getElementById('chatSendForm').style.display = 'flex';
+
+            const btnReset = document.getElementById('btnAdminReset');
+            if (btnReset) {
+                const isAdmin = (username.toLowerCase() === ADMIN_USERNAME.toLowerCase());
+                btnReset.style.display = isAdmin ? 'inline-block' : 'none';
+            }
+
+            renderChats();
+            renderGallery();
+        }
+
+        function showLoggedOutUI() {
+            document.getElementById('authBox').style.display = 'block';
+            document.getElementById('welcomeBanner').style.display = 'none';
+            document.getElementById('chatSendForm').style.display = 'none';
+
+            const btnReset = document.getElementById('btnAdminReset');
+            if (btnReset) btnReset.style.display = 'none';
+
+            renderChats();
+            renderGallery();
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('ISTAL_ACTIVE_USER');
             location.reload();
         }
-    }
 
-    // Helper Anti XSS
-    function escapeHtml(text) {
-        return text
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
+        function resetChatByAdmin() {
+            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+            
+            if (!activeUser || activeUser.toLowerCase() !== ADMIN_USERNAME.toLowerCase()) {
+                alert('Akses ditolak! Hanya akun Admin (suturist4l) yang dapat menghapus seluruh chat.');
+                return;
+            }
 
-    // 3. Kirim Pesan Ke Database
-    function sendChatMessage() {
-        const inputEl = document.getElementById('chatInput');
-        const text = inputEl.value.trim();
-        if (!text) return;
-
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
-
-        chatRef.push({
-            username: currentUser,
-            text: text,
-            time: timeStr,
-            date: dateStr,
-            timestamp: firebase.database.ServerValue.TIMESTAMP
-        }).then(() => {
-            inputEl.value = '';
-        }).catch((err) => {
-            alert('Gagal mengirim pesan: ' + err.message);
-        });
-    }
-
-    // 4. Hapus Pesan Satuan (Admin Only)
-    function deleteChatMessage(key) {
-        if (!key) return;
-        if (confirm("Hapus pesan ini?")) {
-            chatRef.child(key).remove();
+            if (confirm('Apakah Anda yakin ingin menghapus SELURUH pesan chat secara permanen?')) {
+                localStorage.setItem('ISTAL_CHATS', JSON.stringify([]));
+                renderChats();
+                alert('Semua pesan chat berhasil dibersihkan!');
+            }
         }
-    }
 
-    // 5. Reset Semua Chat (Admin Only)
-    function resetAllChats() {
-        if (!isCurrentAdmin) return;
-        if (confirm("Apakah Anda yakin ingin menghapus SELURUH isi chat?")) {
-            chatRef.remove().then(() => {
-                alert("Semua chat berhasil dibersihkan!");
-            }).catch((err) => {
-                alert("Gagal reset chat: " + err.message);
+        function sendChatMessage() {
+            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+            const msgInput = document.getElementById('chatInputMsg');
+            const text = msgInput.value.trim();
+
+            if (!text || !activeUser) return;
+
+            const now = new Date();
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            const dateStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+
+            let chats = JSON.parse(localStorage.getItem('ISTAL_CHATS')) || [];
+            if (!Array.isArray(chats)) chats = [];
+
+            chats.push({ 
+                username: activeUser, 
+                text: text, 
+                time: timeStr,
+                date: dateStr 
             });
-        }
-    }
 
-    // Listener Tombol Enter
-    document.getElementById('chatInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') sendChatMessage();
-    });
+            localStorage.setItem('ISTAL_CHATS', JSON.stringify(chats));
 
-    // 6. Listener Realtime Firebase
-    chatRef.on('value', (snapshot) => {
-        const chatBox = document.getElementById('chatBox');
-        const data = snapshot.val();
-
-        if (!data) {
-            chatBox.innerHTML = `
-                <div style="text-align: center; color: var(--text-muted); padding: 40px 10px; font-size: 0.85rem;">
-                    Belum ada pesan silaturahmi.
-                </div>
-            `;
-            return;
+            msgInput.value = '';
+            renderChats();
         }
 
-        let htmlContent = '';
+        function renderChats() {
+            const chatBox = document.getElementById('chatBox');
+            if (!chatBox) return;
 
-        Object.keys(data).forEach(key => {
-            const chat = data[key];
-            const username = chat.username || 'Anonim';
-            const initial = username.charAt(0).toUpperCase();
-            const timeInfo = chat.time || '';
-            const dateInfo = chat.date || '';
-            const safeText = escapeHtml(chat.text || '');
+            let rawChats = localStorage.getItem('ISTAL_CHATS');
+            let chats = [];
+            try {
+                chats = rawChats ? JSON.parse(rawChats) : [];
+            } catch(e) {
+                chats = [];
+            }
 
-            const isMsgFromAdmin = (username.toLowerCase() === ADMIN_USERNAME.toLowerCase());
-            const verifiedBadge = isMsgFromAdmin 
-                ? `<i class="fa-solid fa-circle-check" style="color: #1DA1F2; font-size: 0.8rem;" title="Admin"></i>` 
-                : '';
+            if (!Array.isArray(chats) || chats.length === 0) {
+                chatBox.innerHTML = `
+                    <div style="text-align: center; color: #888; padding: 40px 10px; font-size: 0.8rem;">
+                        <i class="fa-solid fa-comments" style="font-size: 2rem; margin-bottom: 8px; color: #ccc;"></i><br>
+                        Belum ada pesan silaturahmi.
+                    </div>
+                `;
+                return;
+            }
 
-            const deleteBtn = isCurrentAdmin 
-                ? `<button class="btn-delete-msg" onclick="deleteChatMessage('${key}')"><i class="fa-solid fa-trash"></i></button>` 
-                : '';
+            let htmlContent = '';
+            chats.forEach(chat => {
+                const username = chat.username || 'Anonim';
+                const initial = username.charAt(0).toUpperCase();
+                const timeInfo = chat.time || '';
+                const dateInfo = chat.date || '';
 
-            htmlContent += `
-                <div class="chat-bubble-item">
-                    <div class="user-avatar">${initial}</div>
-                    <div>
-                        <div class="bubble-content">
-                            <div class="bubble-username">${escapeHtml(username)} ${verifiedBadge}</div>
-                            <div class="bubble-text">${safeText}</div>
-                        </div>
-                        <div class="bubble-meta">
-                            <span><i class="fa-regular fa-clock"></i> ${timeInfo} • ${dateInfo}</span>
-                            ${deleteBtn}
+                htmlContent += `
+                    <div class="chat-item">
+                        <div class="chat-avatar">${initial}</div>
+                        <div class="chat-content-wrapper">
+                            <div class="chat-text-bg">
+                                <div class="chat-username">${username}</div>
+                                <div>${chat.text}</div>
+                            </div>
+                            <div class="chat-meta">
+                                <i class="fa-regular fa-clock"></i> ${timeInfo} ${dateInfo ? '• ' + dateInfo : ''}
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-        });
+                `;
+            });
 
-        chatBox.innerHTML = htmlContent;
-        chatBox.scrollTop = chatBox.scrollHeight;
-    });
-</script>
+            chatBox.innerHTML = htmlContent;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
 
+        // ==========================================
+        // FITUR UPLOAD & MANAJEMEN GALERI FOTO ADMIN
+        // ==========================================
+        function uploadGalleryPhoto() {
+            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+            if (!activeUser || activeUser.toLowerCase() !== ADMIN_USERNAME.toLowerCase()) {
+                alert('Akses Ditolak! Hanya Admin (suturist4l) yang dapat meng-upload foto.');
+                return;
+            }
+
+            const fileInput = document.getElementById('galleryFileInput');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Harap pilih berkas foto terlebih dahulu!');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            if (file.size > 2.5 * 1024 * 1024) {
+                alert('Ukuran foto terlalu besar! Harap pilih foto dengan ukuran maksimal 2.5 MB agar penyimpanan lancar.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                let photos = JSON.parse(localStorage.getItem('ISTAL_GALLERY')) || [];
+                if (!Array.isArray(photos)) photos = defaultGallery;
+
+                photos.unshift({
+                    id: Date.now(),
+                    url: e.target.result
+                });
+
+                try {
+                    localStorage.setItem('ISTAL_GALLERY', JSON.stringify(photos));
+                    fileInput.value = '';
+                    renderGallery();
+                    alert('Berhasil! Foto baru berhasil ditambahkan ke Galeri.');
+                } catch(err) {
+                    alert('Penyimpanan memori penuh! Coba hapus beberapa foto lama terlebih dahulu.');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function deleteGalleryPhoto(photoId) {
+            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+            if (!activeUser || activeUser.toLowerCase() !== ADMIN_USERNAME.toLowerCase()) {
+                alert('Akses Ditolak!');
+                return;
+            }
+
+            if (confirm('Apakah Anda yakin ingin menghapus foto ini dari galeri?')) {
+                let photos = JSON.parse(localStorage.getItem('ISTAL_GALLERY')) || [];
+                photos = photos.filter(p => p.id !== photoId);
+                localStorage.setItem('ISTAL_GALLERY', JSON.stringify(photos));
+                renderGallery();
+            }
+        }
+
+        function renderGallery() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            const adminControls = document.getElementById('adminGalleryControls');
+            if (!galleryGrid) return;
+
+            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+            const isAdmin = (activeUser && activeUser.toLowerCase() === ADMIN_USERNAME.toLowerCase());
+
+            // Tampilkan / Sembunyikan Panel Upload berdasarkan status Login Admin
+            if (adminControls) {
+                adminControls.style.display = isAdmin ? 'block' : 'none';
+            }
+
+            let rawPhotos = localStorage.getItem('ISTAL_GALLERY');
+            let photos = [];
+            try {
+                photos = rawPhotos ? JSON.parse(rawPhotos) : defaultGallery;
+            } catch(e) {
+                photos = defaultGallery;
+            }
+
+            if (!Array.isArray(photos) || photos.length === 0) {
+                galleryGrid.innerHTML = `
+                    <div style="grid-column: span 2; text-align: center; color: #888; padding: 20px; font-size: 0.8rem;">
+                        Belum ada foto di galeri.
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            photos.forEach(item => {
+                html += `
+                    <div style="position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 1/1; box-shadow: 0 2px 6px rgba(0,0,0,0.12); background: #eee;">
+                        <img src="${item.url}" alt="Foto Galeri ISTAL" style="width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer;" onclick="openFullImage('${item.url}')">
+                        ${isAdmin ? `
+                            <button onclick="deleteGalleryPhoto(${item.id})" title="Hapus foto" style="position: absolute; top: 6px; right: 6px; background: rgba(231, 76, 60, 0.92); color: white; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 2;">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            galleryGrid.innerHTML = html;
+        }
+
+        // DOM READY LOADER
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
 </body>
 </html>
