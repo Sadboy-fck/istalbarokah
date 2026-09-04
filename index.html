@@ -650,9 +650,10 @@
 
         <!-- 4 GRID MENU KOTAK -->
         <div class="grid-menu">
-            <div class="grid-card" onclick="openModal('modalQuotes')">
-                <i class="fa-solid fa-quote-left"></i>
-                <span>Quotes Islam</span>
+            <!-- DENGAN NAMA VIDEO & ICON YOUTUBE -->
+            <div class="grid-card" onclick="openModal('modalVideo')">
+                <i class="fa-brands fa-youtube" style="color: #ff0000;"></i>
+                <span>Video</span>
             </div>
             <div class="grid-card" onclick="openModal('modalGallery')">
                 <i class="fa-solid fa-images"></i>
@@ -716,15 +717,29 @@
 
     </div>
 
-    <!-- MODAL POPUP -->
-    <div class="modal" id="modalQuotes">
+    <!-- MODAL POPUP VIDEO YOUTUBE ISTAL -->
+    <div class="modal" id="modalVideo">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('modalQuotes')">&times;</span>
-            <div class="modal-header"><i class="fa-solid fa-quote-left"></i> Quotes Islam Harian</div>
+            <span class="close-btn" onclick="closeModal('modalVideo')">&times;</span>
+            <div class="modal-header">
+                <i class="fa-brands fa-youtube" style="color: #ff0000; font-size: 1.2rem;"></i> Channel Video ISTAL
+            </div>
             <div class="modal-body">
-                <p class="arabic-text" style="font-size: 1.3rem; margin: 10px 0; color: var(--bg-dark-green);" id="quoteArabic">إِنَّ مَعَ الْعُسْرِ يُسْرًا</p>
-                <p style="font-style: italic; color: #444; font-size: 0.8rem;" id="quoteText">"Sesungguhnya sesudah kesulitan itu ada kemudahan." (QS. Al-Insyirah: 6)</p>
-                <button class="btn-send" style="margin: 12px auto 0;" onclick="randomQuote()">Acak Quote</button>
+                <!-- IFRAME PREVIEW VIDEO YOUTUBE (BISA DIGANTI DENGAN LINK EMBED DARI YOUTUBE KAMU) -->
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 10px; background: #000;">
+                    <iframe style="position: absolute; top:0; left: 0; width: 100%; height: 100%; border:0;" 
+                        src="https://www.youtube.com/embed/videoseries?list=PL" 
+                        title="YouTube video ISTAL" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen></iframe>
+                </div>
+                <p style="font-size: 0.78rem; color: #444; margin-bottom: 12px; line-height: 1.3;">
+                    Tonton dokumentasi kegiatan, kajian rutin, serta transparansi penyaluran infaq & sodaqoh di Channel YouTube Resmi ISTAL.
+                </p>
+                <!-- TOMBOL MENUJU CHANNEL YOUTUBE (GANTI href DENGAN LINK CHANNEL KAMU) -->
+                <a href="https://www.youtube.com" target="_blank" class="btn-send" style="text-decoration: none; display: inline-flex; justify-content: center; width: 100%; background: #ff0000; color: #fff;">
+                    <i class="fa-brands fa-youtube"></i> Buka Channel YouTube
+                </a>
             </div>
         </div>
     </div>
@@ -826,18 +841,6 @@
             for (let i = 0; i < modals.length; i++) {
                 if (event.target == modals[i]) modals[i].style.display = "none";
             }
-        }
-
-        // QUOTES ISLAM
-        const quotesList = [
-            { text: '"Sesungguhnya sesudah kesulitan itu ada kemudahan."', ref: '(QS. Al-Insyirah: 6)', ar: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا' },
-            { text: '"Maka ingatlah kepada-Ku, Aku pun akan ingat kepadamu."', ref: '(QS. Al-Baqarah: 152)', ar: 'فَاذْكُرُونِي أَذْكُرْكُمْ' },
-            { text: '"Sebaik-baik manusia adalah yang paling bermanfaat bagi orang lain."', ref: '(HR. Ahmad)', ar: 'خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ' }
-        ];
-        function randomQuote() {
-            const idx = Math.floor(Math.random() * quotesList.length);
-            document.getElementById('quoteText').innerText = `${quotesList[idx].text} ${quotesList[idx].ref}`;
-            document.getElementById('quoteArabic').innerText = quotesList[idx].ar;
         }
 
         // AKUN & CHAT SYSTEM
