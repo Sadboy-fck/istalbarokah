@@ -522,6 +522,8 @@
             position: relative;
             border-top: 4px solid var(--accent-gold);
             animation: popIn 0.2s ease;
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
         @keyframes popIn {
@@ -648,7 +650,7 @@
     <!-- MAIN CONTAINER -->
     <div class="container">
 
-        <!-- 4 GRID MENU KOTAK (ICON YOUTUBE WARNA SESUAI TEMA) -->
+        <!-- 4 GRID MENU KOTAK -->
         <div class="grid-menu">
             <div class="grid-card" onclick="openModal('modalVideo')">
                 <i class="fa-brands fa-youtube"></i>
@@ -716,7 +718,7 @@
 
     </div>
 
-    <!-- MODAL POPUP VIDEO YOUTUBE ISTAL (WARNA DIADAPTASI KE HIJAU TEMA) -->
+    <!-- MODAL POPUP VIDEO YOUTUBE ISTAL -->
     <div class="modal" id="modalVideo">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalVideo')">&times;</span>
@@ -734,7 +736,6 @@
                 <p style="font-size: 0.78rem; color: #444; margin-bottom: 12px; line-height: 1.3;">
                     Tonton dokumentasi kegiatan, kajian rutin, serta transparansi penyaluran infaq & sodaqoh di Channel YouTube Resmi ISTAL.
                 </p>
-                <!-- TOMBOL WARNA TEMA HIJAU HIJRAH -->
                 <a href="https://www.youtube.com" target="_blank" class="btn-send" style="text-decoration: none; display: inline-flex; justify-content: center; width: 100%;">
                     <i class="fa-brands fa-youtube"></i> Buka Channel YouTube
                 </a>
@@ -742,21 +743,35 @@
         </div>
     </div>
 
+    <!-- MODAL GALERI FOTO KEGIATAN (WITH ADMIN UPLOAD SYSTEM) -->
     <div class="modal" id="modalGallery">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalGallery')">&times;</span>
             <div class="modal-header"><i class="fa-solid fa-images"></i> Galeri Foto Kegiatan</div>
+            
+            <!-- PANEL UPLOAD KHUSUS ADMIN (TIDAK TAMPIL UNTUK USER BIASA) -->
+            <div id="adminGalleryControls" style="display: none; background: #eef5f2; border: 1.5px dashed var(--bg-dark-green); padding: 10px; border-radius: 8px; margin-top: 10px; text-align: left;">
+                <div style="font-size: 0.75rem; font-weight: 700; color: var(--bg-dark-green); margin-bottom: 6px;">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Menu Admin: Upload Foto Galeri Baru
+                </div>
+                <div style="display: flex; gap: 6px; flex-direction: column;">
+                    <input type="file" id="galleryFileInput" accept="image/*" style="font-size: 0.75rem; background: #fff; padding: 6px; border-radius: 6px; border: 1px solid #ccc; width: 100%;">
+                    <button class="btn-send" onclick="uploadGalleryPhoto()" style="padding: 7px 12px; font-size: 0.75rem; justify-content: center; margin-top: 4px;">
+                        <i class="fa-solid fa-upload"></i> Upload Ke Galeri
+                    </button>
+                </div>
+            </div>
+
+            <!-- GRID DISPLAY FOTO GALERI -->
             <div class="modal-body">
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;">
-                    <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=400&q=80" alt="Kegiatan 1">
-                    <img src="https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=400&q=80" alt="Kegiatan 2">
-                    <img src="https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=400&q=80" alt="Kegiatan 3">
-                    <img src="https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=400&q=80" alt="Kegiatan 4">
+                <div id="galleryGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                    <!-- Foto di-render dinamis dari JS -->
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- MODAL SODAQOH -->
     <div class="modal" id="modalSodaqoh">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalSodaqoh')">&times;</span>
@@ -771,6 +786,7 @@
         </div>
     </div>
 
+    <!-- MODAL KEGIATAN -->
     <div class="modal" id="modalKegiatan">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalKegiatan')">&times;</span>
@@ -831,16 +847,6 @@
         }
         setInterval(autoSlide, 4000);
 
-        // MODAL CONTROLLER
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        window.onclick = function(event) {
-            const modals = document.getElementsByClassName('modal');
-            for (let i = 0; i < modals.length; i++) {
-                if (event.target == modals[i]) modals[i].style.display = "none";
-            }
-        }
-
         // AKUN & CHAT SYSTEM
         let currentAuthMode = 'login';
         
@@ -857,13 +863,26 @@
             }
         ];
 
+        // DEFAULT FOTO GALERI
+        const defaultGallery = [
+            { id: 101, url: 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=400&q=80' },
+            { id: 102, url: 'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=400&q=80' },
+            { id: 103, url: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=400&q=80' },
+            { id: 104, url: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=400&q=80' }
+        ];
+
         function initApp() {
             try {
                 if (localStorage.getItem('ISTAL_CHATS') === null) {
                     localStorage.setItem('ISTAL_CHATS', JSON.stringify(defaultChats));
                 }
 
+                if (localStorage.getItem('ISTAL_GALLERY') === null) {
+                    localStorage.setItem('ISTAL_GALLERY', JSON.stringify(defaultGallery));
+                }
+
                 renderChats();
+                renderGallery();
 
                 const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
                 if (activeUser) {
@@ -874,7 +893,25 @@
             } catch (err) {
                 console.error("Initialization Error:", err);
                 renderChats();
+                renderGallery();
                 showLoggedOutUI();
+            }
+        }
+
+        // MODAL CONTROLLER
+        function openModal(id) { 
+            document.getElementById(id).style.display = 'flex'; 
+            if (id === 'modalGallery') {
+                renderGallery();
+            }
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let i = 0; i < modals.length; i++) {
+                if (event.target == modals[i]) modals[i].style.display = "none";
             }
         }
 
@@ -910,7 +947,7 @@
                     if (passwordInput === ADMIN_PASSWORD) {
                         localStorage.setItem('ISTAL_ACTIVE_USER', ADMIN_USERNAME);
                         showLoggedInUI(ADMIN_USERNAME);
-                        alert('Selamat datang Admin suturist4l!');
+                        alert('Selamat datang Admin suturist4l! Fitur Upload Foto Galeri telah aktif.');
                         return;
                     } else {
                         alert('Kata Sandi Admin Salah!');
@@ -969,6 +1006,7 @@
             }
 
             renderChats();
+            renderGallery();
         }
 
         function showLoggedOutUI() {
@@ -980,6 +1018,7 @@
             if (btnReset) btnReset.style.display = 'none';
 
             renderChats();
+            renderGallery();
         }
 
         function logoutUser() {
@@ -1076,6 +1115,112 @@
 
             chatBox.innerHTML = htmlContent;
             chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // ==========================================
+        // FITUR UPLOAD & MANAJEMEN GALERI FOTO ADMIN
+        // ==========================================
+        function uploadGalleryPhoto() {
+            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+            if (!activeUser || activeUser.toLowerCase() !== ADMIN_USERNAME.toLowerCase()) {
+                alert('Akses Ditolak! Hanya Admin (suturist4l) yang dapat meng-upload foto.');
+                return;
+            }
+
+            const fileInput = document.getElementById('galleryFileInput');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Harap pilih berkas foto terlebih dahulu!');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            if (file.size > 2.5 * 1024 * 1024) {
+                alert('Ukuran foto terlalu besar! Harap pilih foto dengan ukuran maksimal 2.5 MB agar penyimpanan lancar.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                let photos = JSON.parse(localStorage.getItem('ISTAL_GALLERY')) || [];
+                if (!Array.isArray(photos)) photos = defaultGallery;
+
+                photos.unshift({
+                    id: Date.now(),
+                    url: e.target.result
+                });
+
+                try {
+                    localStorage.setItem('ISTAL_GALLERY', JSON.stringify(photos));
+                    fileInput.value = '';
+                    renderGallery();
+                    alert('Berhasil! Foto baru berhasil ditambahkan ke Galeri.');
+                } catch(err) {
+                    alert('Penyimpanan memori penuh! Coba hapus beberapa foto lama terlebih dahulu.');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function deleteGalleryPhoto(photoId) {
+            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+            if (!activeUser || activeUser.toLowerCase() !== ADMIN_USERNAME.toLowerCase()) {
+                alert('Akses Ditolak!');
+                return;
+            }
+
+            if (confirm('Apakah Anda yakin ingin menghapus foto ini dari galeri?')) {
+                let photos = JSON.parse(localStorage.getItem('ISTAL_GALLERY')) || [];
+                photos = photos.filter(p => p.id !== photoId);
+                localStorage.setItem('ISTAL_GALLERY', JSON.stringify(photos));
+                renderGallery();
+            }
+        }
+
+        function renderGallery() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            const adminControls = document.getElementById('adminGalleryControls');
+            if (!galleryGrid) return;
+
+            const activeUser = localStorage.getItem('ISTAL_ACTIVE_USER');
+            const isAdmin = (activeUser && activeUser.toLowerCase() === ADMIN_USERNAME.toLowerCase());
+
+            // Tampilkan / Sembunyikan Panel Upload berdasarkan status Login Admin
+            if (adminControls) {
+                adminControls.style.display = isAdmin ? 'block' : 'none';
+            }
+
+            let rawPhotos = localStorage.getItem('ISTAL_GALLERY');
+            let photos = [];
+            try {
+                photos = rawPhotos ? JSON.parse(rawPhotos) : defaultGallery;
+            } catch(e) {
+                photos = defaultGallery;
+            }
+
+            if (!Array.isArray(photos) || photos.length === 0) {
+                galleryGrid.innerHTML = `
+                    <div style="grid-column: span 2; text-align: center; color: #888; padding: 20px; font-size: 0.8rem;">
+                        Belum ada foto di galeri.
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            photos.forEach(item => {
+                html += `
+                    <div style="position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 1/1; box-shadow: 0 2px 6px rgba(0,0,0,0.12); background: #eee;">
+                        <img src="${item.url}" alt="Foto Galeri ISTAL" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                        ${isAdmin ? `
+                            <button onclick="deleteGalleryPhoto(${item.id})" title="Hapus foto" style="position: absolute; top: 6px; right: 6px; background: rgba(231, 76, 60, 0.92); color: white; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            galleryGrid.innerHTML = html;
         }
 
         // DOM READY LOADER
