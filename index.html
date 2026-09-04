@@ -932,7 +932,10 @@
             // Munculkan tombol reset HANYA jika username mengandung kata 'admin'
             const btnReset = document.getElementById('btnAdminReset');
             if (btnReset) {
-                const isAdmin = username.toLowerCase().includes('admin');
+               // KODE BARU (Masukkan username kamu di dalam tanda kurung siku []):
+const adminList = ['prio11', 'admin', 'admin istal']; 
+const isAdmin = adminList.includes(username.toLowerCase());
+ );
                 btnReset.style.display = isAdmin ? 'inline-block' : 'none';
             }
 
